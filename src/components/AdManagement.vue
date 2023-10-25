@@ -10,13 +10,11 @@
       </div>
      
       <div class="relative overflow-x-auto mt-10">
-
-
   <div>
 
   <div class="">
   <form class="">
-    <div class="overflow-auto">
+    <div class="overflow-auto mb-3">
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 my-5 admanagementtbl">
     <thead class="text-xs text-gray-700 uppercase bg-gray-100">
       <tr>

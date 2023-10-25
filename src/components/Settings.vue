@@ -16,7 +16,7 @@
 
   <div class="">
   <form class="">
-    <div class="overflow-auto">
+    <div class="overflow-auto mb-3">
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 my-5 admanagementtbl">
     <thead class="text-xs text-gray-700 uppercase bg-gray-100">
       <tr>
@@ -53,7 +53,7 @@
       <tr class="border" v-for="(row, index) in rows" :key="index">
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">Account Name </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="requester" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{ row.advskunumber }}</td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap" >{{row.purpose}}{{ row.advskunumber }}</td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
             <input type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
         </td>
@@ -89,7 +89,7 @@
               <option value="2">見出し：2</option>
               <option value="3">両方：3</option>
             </select></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"> <select id="purpose" class="w-auto  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"> <select id="purpose" v-model="row.purpose" class="w-auto  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option value="AB">AB：A/B test</option>
               <option value="BR">BR:Brand Awareness</option>
               <option value="CA">CA:キャンペーン</option>
@@ -139,10 +139,11 @@ export default {
 setup() {
 
 const rows = ref([
-  { advskunumber: ''},
-  { advskunumber: ''},
-  { advskunumber: ''},
+  { campaignID:'', advskunumber: ''},
+  { campaignID:'',advskunumber: ''},
+  { campaignID:'', advskunumber: ''},
 ]);
+
 
 const getValues = () => {
       const values = rows.value;
