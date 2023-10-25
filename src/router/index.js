@@ -33,9 +33,14 @@ const router = createRouter({
       component: () => import('../views/GeneralAppeal.vue')
     },
     {
-      path: '/settings',
-      name: 'settings',
+      path: '/adsettings',
+      name: 'adsettings',
       component: () => import('../views/Settings.vue')
+    },
+    {
+      path: '/admanagement',
+      name: 'admanagement',
+      component: () => import('../views/Admanagement.vue')
     }
   ]
 })
