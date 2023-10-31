@@ -125,3 +125,8 @@ a,
     padding: 4em 2em;
   }
 }
+
+.ant-modal-mask {
+  opacity: 0.1;
+    background: black;
+}

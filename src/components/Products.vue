@@ -10,9 +10,11 @@
         Back</button><h3 class="font-bold text-xl">Products</h3>
       </div>
       <div class="relative overflow-x-auto mt-10">
-      <table class="w-3/4 text-sm text-left text-gray-500 dark:text-gray-400">
+    
+    <table class="w-3/4 text-sm text-left text-gray-500 dark:text-gray-400">
     <thead class="text-xs text-gray-700 uppercase bg-gray-100">
       <tr>
+        <th class="px-6 py-3">S.No</th>
         <th class="px-6 py-3">Products</th>
         <th class="px-6 py-3">Image</th>
         <th class="px-6 py-3">ASIN</th>
@@ -20,41 +22,104 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="border-b">
-        <td class="px-6 py-4 font-medium text-gray-700 dark:text-blue-500  whitespace-nowrap">
-          Product Name 1 </td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><img width="50" src="../assets/pdtimg.jpg"></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">B0EOFU39234</td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-            <button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">Edit</button>
-            <RouterLink :to= "{ name: 'productinfo'}"><button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">Create headline</button></RouterLink>
-       </td>
-      </tr>
-      <tr class="border-b">
-        <td class="px-6 py-4 font-medium text-gray-700 dark:text-blue-500  whitespace-nowrap">
-          Product Name 2 </td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><img width="50" src="../assets/pdtimg.jpg"></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">B0EOFU39234</td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-            <button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">Edit</button>
-            <RouterLink :to= "{ name: 'productinfo'}"><button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">Create headline</button></RouterLink>
-          </td>
-      </tr>
-      <tr class="border-b">
-        <td class="px-6 py-4 font-medium text-gray-700 dark:text-blue-500  whitespace-nowrap">
-          Product Name 3 </td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><img width="50" src="../assets/pdtimg.jpg"></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">B0EOFU39234</td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-         <button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">Edit</button>
-         <RouterLink :to= "{ name: 'productinfo'}"><button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">Create headline</button></RouterLink>
-       
+
+      <template v-for = "(product) in products">
+        <tr class="border-b" :id="`accordion-collapse-heading-${product.id}`" >
+          <td class="px-6 py-4 font-medium text-gray-700 dark:text-blue-500  whitespace-nowrap">
+            {{ product.id }}
+      </td>
+          <td class="px-6 py-4 font-medium text-gray-700 dark:text-blue-500  whitespace-nowrap">
+            {{ product.name }}</td>
+          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><img width="50" :src=product.imgsrc></td>
+          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{product.asin}}</td>
+          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
+              <button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">Edit</button>
+              <RouterLink :to= "{ name: 'productinfo'}"><button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">見出しの作成</button></RouterLink>
         </td>
+        </tr>
+
+        <tr class="border-b">
+          <td colspan="5">
+            <div class="relative overflow-x-auto">
+      <table class="w-3/4 text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+      <tr>
+        <th class="px-6 py-3">Serial No.</th>
+        <th class="px-6 py-3">Products</th>
+        <th class="px-6 py-3">ASIN</th>
+        <th class="px-6 py-3"></th>
       </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b" v-for = "childpdt in product.childpdts">
+          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{ childpdt.id }}</td>
+          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{childpdt.name}}</td>
+          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{childpdt.asin}}</td>
+          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
+              <button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">Edit</button>
+       </td>
+        </tr>
+    </tbody>
+    </table>
+    </div>
+          </td>
+        </tr>
+
+            </template>
+          
+         
 
     </tbody>
   </table>
+</div>
   </div>
-    </div>
+
     
   </template>
+
+<script >
+import { ref, onMounted , computed} from "vue";
+
+
+export default {
+  name:'Products',
+  setup() {
+    
+    const products = ref([{
+      id:'001',
+      name:'Product Name 1',
+      asin:'B0EOFU39234',
+      imgsrc:'../src/assets/pdtimg.jpg',
+      childpdts:[{
+        id:'001a',
+        name:'Child Name 1',
+        asin:'B0EOFU39234',
+      },
+      {
+        id:'001b',
+        name:'Child Name 2',
+        asin:'B0EOFU39245',
+      }
+    ]},
+    {
+      id:'002',
+      name:'Product Name 2',
+      asin:'B0EOFU39235',
+      imgsrc:'../src/assets/pdtimg.jpg',
+      childpdts:[{
+        id:'001a',
+        name:'Child Name 1',
+        asin:'B0EOFU39234',
+      },
+      {
+        id:'001b',
+        name:'Child Name 2',
+        asin:'B0EOFU39245',
+      }
+    ]}
+  ])
+  return {products}
+  }
+}
+
+</script>

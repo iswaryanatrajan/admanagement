@@ -51,16 +51,23 @@
     </thead>
     <tbody>
       <tr class="border" v-for="(row, index) in rows" :key="index">
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">Account Name </td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{row.accountname}} </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="requester" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap" >{{row.purpose}}{{ row.advskunumber }}</td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
             <input type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
         </td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="adtype" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div class="mb-3">
-            <select id="optimizationstrategy" class="w-auto  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select id="adtype"  class="w-auto  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option selected>SD</option>
+              <option>SB</option>
+            </select>
+          </div>
+        </td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
+          <div class="mb-3">
+            <select id="optimizationstrategy"   class="w-auto  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option>Conversion</option>
               <option>Page View</option>
               <option>Reach</option>
@@ -100,20 +107,20 @@
               <option value="VCPM">VCPM</option>
             </select></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.advskunumber" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="advasin" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">『ブルーライトの心配ゼロ。目に優しい映し出し。』</td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="category1" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="category2" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="category3" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="lookback1" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="lookback2" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="narrowdown" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="cpc" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="image" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="imagelink" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="market" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="appeal" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><textarea class="p-3 border w-full" v-model="comment" placeholder=""></textarea></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.advasin" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{row.headline}}</td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category1" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category2" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category3" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.lookback1" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.lookback2" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.narrowdown" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.cpc" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.image" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.imagelink" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.market" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.appeal" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><textarea class="p-3 border w-full" v-model="row.comment" placeholder=""></textarea></td>
       </tr>
 
     </tbody>
@@ -139,10 +146,26 @@ export default {
 setup() {
 
 const rows = ref([
-  { campaignID:'', advskunumber: ''},
-  { campaignID:'',advskunumber: ''},
-  { campaignID:'', advskunumber: ''},
+  { accountname:'Account 1', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: ''},
+  { accountname:'Account 1', headline:'headline 2',campaignID:'',advskunumber: ''},
+  { accountname:'Account 1', headline:'headline 3',campaignID:'', advskunumber: ''},
+  { accountname:'Account 1', headline:'Weakpoint headline 1',campaignID:'', advskunumber: ''},
+  { accountname:'Account 1', headline:'headline 2',campaignID:'',advskunumber: ''},
+  { accountname:'Account 1', headline:'headline 3',campaignID:'', advskunumber: ''},
+  { accountname:'Account 2', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: ''},
+  { accountname:'Account 2', headline:'headline 2',campaignID:'',advskunumber: ''},
+  { accountname:'Account 2', headline:'headline 3',campaignID:'', advskunumber: ''},
+  { accountname:'Account 2', headline:'Weakpoint headline 2',campaignID:'', advskunumber: ''},
+  { accountname:'Account 2', headline:'headline 2',campaignID:'',advskunumber: ''},
+  { accountname:'Account 2', headline:'headline 3',campaignID:'', advskunumber: ''},
+  { accountname:'Account 3', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: ''},
+  { accountname:'Account 3', headline:'headline 2',campaignID:'',advskunumber: ''},
+  { accountname:'Account 3', headline:'headline 3',campaignID:'', advskunumber: ''},
+  { accountname:'Account 3', headline:'Weakpoint headline 3',campaignID:'', advskunumber: ''},
+  { accountname:'Account 3', headline:'headline 2',campaignID:'',advskunumber: ''},
+  { accountname:'Account 3', headline:'headline 3',campaignID:'', advskunumber: ''},
 ]);
+
 
 
 const getValues = () => {
