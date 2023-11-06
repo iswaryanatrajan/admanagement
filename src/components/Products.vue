@@ -110,7 +110,7 @@
         </q-card-section>
         <q-card-section>
           <div class="">ASIN</div>
-          <q-input dense v-model="asin"></q-input>
+          <q-input dense v-model="child_asin"></q-input>
         </q-card-section>
         <q-card-section>
           <div class="">Product Image</div>

@@ -10,13 +10,13 @@
       </div>
      
       <div class="relative overflow-x-auto mt-10">
-      <table class="w-auto text-sm text-left text-gray-500 dark:text-gray-400 ">
+        <table class="w-50 text-sm text-left text-gray-500 dark:text-gray-400">
     <tbody>
-      <tr class="border-b">
+      <tr class="border-b" v-if="row!==null">
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-          Product Name 1</td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><img width="50" src="../assets/pdtimg.jpg"></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">B0EOFU39234</td>
+         {{row.product_name}}</td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><img width="50" :src="row.image_url"></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{row.asin}}</td>
       </tr>
     </tbody>
   </table>
@@ -30,17 +30,16 @@
     <table class="text-sm text-left text-gray-500 dark:text-gray-400 my-5">
     <thead class="text-xs text-gray-700 uppercase bg-gray-100">
       <tr>
-        <th class="px-6 py-3">①訴求(appeal)　Strong point</th>
-        <th class="px-6 py-3">②ターゲット who is the target?</th>
-        <th class="px-6 py-3"></th>
-        <th class="px-6 py-3"></th>
+        <th class="w-2/5 px-6 py-3 w-3">①訴求(appeal)　Strong point</th>
+        <th class="w-2/5 px-6 py-3">②ターゲット who is the target?</th>
+        <th class="w-1/5 px-6 py-3"></th>
       </tr>
     </thead>
     <tbody>
       <tr class="border" v-for="index in rownumber1" :key="index">
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-          <textarea class="p-3 border w-100" rows="10" style="height:100%;width:100%;display:block" v-model="strongpoint" placeholder="Enter a strong point"></textarea></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
+        <td class="px-4 py-2 font-medium text-gray-700 whitespace-nowrap">
+          <textarea class="p-3 border  border-gray-300 w-100 rounded-lg" rows="14" cols="30"  v-model="strongpoint" placeholder="Enter a strong point"></textarea></td>
+        <td class="w-1/px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div class="mb-3 flex items-center">
             <label for="age" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100">Age:</label>
             <select id="age" v-model="minage" class="w-max mr-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -58,6 +57,7 @@
             </select>
           </div>
           <div class="mb-3">
+            <label for="gender" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100">Gender:</label>
             <select id="gender" v-model="gender"  class="w-max  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option>Select Gender</option>
               <option>Male （男性）</option>
@@ -67,11 +67,11 @@
           </div>
           <div class="mb-3">
           <label for="why" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">ターゲットにする悩みまたは欲しい理由: Why they want to have it?</label>
-          <textarea class="p-3 border w-full" v-model="motivation" placeholder=""></textarea>
+          <textarea class="p-3 border border-gray-300 w-full rounded-lg" v-model="motivation" placeholder=""></textarea>
           </div>
           <div>
           <label for="productfeature" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">どの特徴が、どのように欲しくなるのか、解決するのか:<br> What type of your product feature would solve this issue?</label>
-          <textarea class="p-3 border w-full" v-model="solving_feature" placeholder=""></textarea>
+          <textarea class="p-3 border border-gray-300 w-full rounded-lg" v-model="solving_feature" placeholder=""></textarea>
           </div>
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap flex flex-start w-max items-center">
@@ -155,20 +155,21 @@
       <tr class="border"  v-for="index in rownumber2" :key="index">
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <label for="rivalpdtinfo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">誰をターゲットにしますか？</label>
-          <textarea class="p-3 border w-100"  style="height:100%;width:100%;display:block" v-model="rivalpdtinfo" placeholder="Rival product information"></textarea></td>
+          <textarea class="p-3 border border-gray-300 rounded-lg w-100"  style="height:100%;width:100%;display:block" v-model="rivalpdtinfo" placeholder="Rival product information"></textarea></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div class="">
           <label for="weakpoint1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">ターゲットのウィークポイント</label>
-          <textarea class="p-3 border w-full" v-model="weakpoint" placeholder="Please enter weak point"></textarea>
+          <textarea class="p-3 border border-gray-300 rounded-lg w-full" v-model="weakpoint" placeholder="Please enter weak point"></textarea>
           </div>
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div>
           <label for="productfeature" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">ターゲットのウィークポイントをどのように改善していますか？</label>
-          <textarea class="p-3 border w-full" v-model="productfeature" placeholder=""></textarea>
+          <textarea class="p-3 border border-gray-300 rounded-lg  w-full" v-model="productfeature" placeholder=""></textarea>
           </div>
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap flex flex-start">
+          <button type="button" @click="isHiddenBC = false" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
             <svg @click="deleteRow"  class="w-6 h-6 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
                 </svg>  
@@ -183,10 +184,10 @@
   <svg class="w-3 h-3 ml-1 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
   </svg> </button>
-  <button type="button" @click="isHiddenBC = false"  class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">送信</button>
+
  
   </form>
-  <div v-show="!isHiddenBC" class="chatgptpoints m-5 w-1/2" >
+  <div v-show="!isHiddenBC" class="chatgptpoints p-5 w-1/2" >
     <div class="strongpoint1points border p-3 mb-3" v-for = "(pointslist,index) in pointslistsBC" :key="index">
       <div class="flex items-start justify-between">
         <h3 class="font-bold ">{{ pointslist.name }}</h3>
@@ -290,7 +291,25 @@ const handleOk = () => {
     confirmLoading.value = false;
   }, 2000);
 };
-
+const row=ref(null);
+function loadData () {
+  api.get(`http://159.223.87.212/api/v1/products/${route.params.id}`, { headers: authHeader() })
+      .then((response) => {
+        console.log("row.value")
+        row.value = response.data.data;
+        console.log(row.value)
+      })
+      .catch(() => {
+        console.log('not ht')
+       /* $q.notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Loading failed',
+          icon: 'report_problem'
+        })*/
+      })
+  }
+  loadData();
 
 const pointslistsGA = ref(
   [{
@@ -432,7 +451,7 @@ function toggle(id) {
     }
 
 
-return { pointslistsGA, pointslistsBC, rownumber1,rownumber2,isHiddenGA,isHiddenBC,computedArr,minage,maxage,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,
+return { row,pointslistsGA, pointslistsBC, rownumber1,rownumber2,isHiddenGA,isHiddenBC,computedArr,minage,maxage,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,
       toggle,strongpoint,submitappeal,motivation,solving_feature,gender};
   }
  

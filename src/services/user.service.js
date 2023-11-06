@@ -20,6 +20,8 @@ class UserService {
     return axios.get(API_URL + 'products', { headers: authHeader() });
   }
 
+
+
 }
 
 export default new UserService();
