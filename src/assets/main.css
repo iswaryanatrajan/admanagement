@@ -130,3 +130,5 @@ a,
   opacity: 0.1;
     background: black;
 }
+
+.q-table tr th{background-color: #f3f4f6;}

@@ -10,19 +10,20 @@
       <div class="relative overflow-x-auto my-5">
       <table class="w-50 text-sm text-left text-gray-500 dark:text-gray-400">
     <tbody>
-      <tr class="border-b">
+      <tr class="border-b" v-if="row!==null">
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-          Product Name 1</td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><img width="50" src="../assets/pdtimg.jpg"></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">B0EOFU39234</td>
+         {{row.product_name}}</td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><img width="50" :src="row.image_url"></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{row.asin}}</td>
       </tr>
     </tbody>
   </table>
-  <h3 class="mt-7 mb-2 font-bold">商品情報を入れてください。</h3>
+  <h6 class="mt-7 mb-2 font-bold">商品情報を入れてください。</h6>
   <form>
     <textarea class="p-3 border mb-3" rows="10" cols="50" v-model="productInfo" placeholder="Enter product information"></textarea>
     <p style="white-space: pre-line;">{{ productInfo }}</p>
-    <RouterLink :to= "{ name: 'generalappeal'}"><button type="button" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">次へ</button></RouterLink>
+    <RouterLink v-if="row!==null" :to= "{ name: 'generalappeal', params: { id: row.id}}">
+      <button type="button" @click="postProductInfo()" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">次へ</button></RouterLink>
     
   </form>
   </div>
@@ -31,14 +32,54 @@
 
 <script>
 import { ref, onMounted , computed} from "vue";
+import { api } from '../boot/axios'
+import { useRoute } from 'vue-router'
+import UserService from "../services/user.service";
+import authHeader from '../services/auth-header';
+
 export default {
-  name:'inputbox',
+  name:'productInfo',
   setup() {
-const productInfo = ref("");
-if (productInfo.value === "") return;
-const data={
-    productInfo: productInfo.value,
-}
+    const route = useRoute();
+    const productInfo = ref("");
+    
+
+
+const row=ref(null);
+function loadData () {
+  api.get(`http://159.223.87.212/api/v1/products/${route.params.id}`, { headers: authHeader() })
+      .then((response) => {
+        console.log("row.value")
+        row.value = response.data.data;
+        console.log(row.value)
+      })
+      .catch(() => {
+        console.log('not ht')
+       /* $q.notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Loading failed',
+          icon: 'report_problem'
+        })*/
+      })
+  }
+  loadData();
+  function postProductInfo(){
+    if(productInfo==""){
+        return;
+    }
+    api.put(`http://159.223.87.212/api/v1/products/${route.params.id}`,{"product_info":productInfo.value}, { headers: authHeader() })
+        .then((res) => {
+          //success = true
+          console.log(res);
+        })
+        .catch((error) => {
+          //error = error.data.message;
+          console.log(error);
+        })
+  }
+  return{row,productInfo,postProductInfo}
+
   }
 }
 

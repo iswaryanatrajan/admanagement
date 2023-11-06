@@ -39,7 +39,7 @@
     <tbody>
       <tr class="border" v-for="index in rownumber1" :key="index">
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-          <textarea class="p-3 border w-100" rows="10" style="height:100%;width:100%;display:block" v-model="strongpoint1" placeholder="Enter a strong point"></textarea></td>
+          <textarea class="p-3 border w-100" rows="10" style="height:100%;width:100%;display:block" v-model="strongpoint" placeholder="Enter a strong point"></textarea></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div class="mb-3 flex items-center">
             <label for="age" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100">Age:</label>
@@ -58,7 +58,7 @@
             </select>
           </div>
           <div class="mb-3">
-            <select id="gender" class="w-max  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select id="gender" v-model="gender"  class="w-max  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option>Select Gender</option>
               <option>Male （男性）</option>
               <option>Female （女性）</option>
@@ -67,15 +67,18 @@
           </div>
           <div class="mb-3">
           <label for="why" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">ターゲットにする悩みまたは欲しい理由: Why they want to have it?</label>
-          <textarea class="p-3 border w-full" v-model="whythisproduct" placeholder=""></textarea>
+          <textarea class="p-3 border w-full" v-model="motivation" placeholder=""></textarea>
           </div>
           <div>
           <label for="productfeature" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">どの特徴が、どのように欲しくなるのか、解決するのか:<br> What type of your product feature would solve this issue?</label>
-          <textarea class="p-3 border w-full" v-model="productfeature" placeholder=""></textarea>
+          <textarea class="p-3 border w-full" v-model="solving_feature" placeholder=""></textarea>
           </div>
         </td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap flex flex-start">
-            <svg @click="deleteRow"  class="w-6 h-6 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap flex flex-start w-max items-center">
+         <!--- <button type="button" @click="isHiddenGA = false" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>-->
+        <button type="button" @click="submitappeal" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
+  
+            <svg @click="deleteRow"  class="w-6 h-6 text-grey-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
                 </svg>  
          
@@ -90,7 +93,6 @@
   <svg class="w-3 h-3 ml-1 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
   </svg> </button>
-  <button type="button" @click="isHiddenGA = false" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">送信</button>
   </form>
   <div v-show="!isHiddenGA" class="chatgptpoints m-5 lg:w-1/3 md:w-full">
     <div class="strongpoint1points border p-3 " v-for = "(pointslist,index) in pointslistsGA" :key="index">
@@ -121,7 +123,7 @@
               :class="{ togel: togel[point.id] }"
               @click.prevent="toggle(point.id)"
             >
-              {{ !togel[point.id] ? "edit" : "close ❌" }}
+              {{ !togel[point.id] ? "edit" : "close" }}
             </button>
                 <svg @click="deletetext"  class="w-4 h-4 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
@@ -215,7 +217,7 @@
               :class="{ togel: togel[point.id] }"
               @click.prevent="toggle(point.id)"
             >
-              {{ !togel[point.id] ? "edit" : "close ❌" }}
+              {{ !togel[point.id] ? "edit" : "close" }}
             </button>
                 
                 <svg @click="deletetext"  class="w-4 h-4 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
@@ -249,19 +251,24 @@
 <script lang="ts">
 import { ref, onMounted , computed} from "vue";
 import 'ant-design-vue/dist/reset.css';
-
-
+import { api } from '../boot/axios'
+import { useRoute } from 'vue-router'
+import UserService from "../services/user.service";
+import authHeader from '../services/auth-header';
 
 export default {
   name:'Create Headline',
   setup() {
 
+    const route = useRoute();
+
 const gender = ref("");
-const age = ref("");
-const strongpoint1 = ref("");
-const whythisproduct = ref("");
-const productfeature = ref("");
+
+const strongpoint = ref("");
+const motivation = ref("");
+const solving_feature = ref("");
 const minage= ref(1);
+const maxage= ref(1);
 let rownumber1 = ref(3);
 let rownumber2 = ref(3);
 let isHiddenGA = ref(true);
@@ -283,6 +290,7 @@ const handleOk = () => {
     confirmLoading.value = false;
   }, 2000);
 };
+
 
 const pointslistsGA = ref(
   [{
@@ -381,10 +389,33 @@ const pointslistsGA = ref(
 
   ])
 
-const data={
-    age: age.value,
+
+
+const submitappeal = () => {
+  const appealdata= {
+  product_id:route.params.id,
+  strong_point:strongpoint.value,
+    min_age: minage.value,
+    max_age: maxage.value,
     gender: gender.value,
-   
+    motivation:motivation.value,
+    solving_feature:solving_feature.value
+};
+  console.log(appealdata);
+  api.post(`http://159.223.87.212/api/v1/products/appeal-target/`,appealdata, { headers: authHeader() })
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch(() => {
+        console.log('not ht')
+       /* $q.notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Loading failed',
+          icon: 'report_problem'
+        })*/
+      })
+
 }
 
 const computedArr = computed(() => {
@@ -401,8 +432,8 @@ function toggle(id) {
     }
 
 
-return { pointslistsGA, pointslistsBC, rownumber1,rownumber2,isHiddenGA,isHiddenBC,computedArr,minage,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,
-      toggle,};
+return { pointslistsGA, pointslistsBC, rownumber1,rownumber2,isHiddenGA,isHiddenBC,computedArr,minage,maxage,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,
+      toggle,strongpoint,submitappeal,motivation,solving_feature,gender};
   }
  
 }
