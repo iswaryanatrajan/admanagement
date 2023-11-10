@@ -36,19 +36,19 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="border" v-for="(generalappealform,i) in generalappealforms" v-bind:key="generalappealform.strongpoint">
+      <tr class="border" v-for="(generalappealform,i) in generalappealforms" v-bind:key="generalappealform.strong_point">
         <td class="px-4 py-2 font-medium text-gray-700 whitespace-nowrap">
-          <textarea class="p-3 border  border-gray-300 w-100 rounded-lg" rows="14" cols="20"  v-model="generalappealform.strongpoint" placeholder="Enter a strong point"></textarea></td>
+          <textarea class="p-3 border  border-gray-300 w-100 rounded-lg" rows="14" cols="20"  v-model="generalappealform.strong_point" placeholder="Enter a strong point"></textarea></td>
         <td class="w-1/px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div class="mb-3 flex items-center">
             <label for="age" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100">Age:</label>
-            <select id="age" v-model="generalappealform.minage" class="w-max mr-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select id="age" v-model="generalappealform.min_age" class="w-max mr-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option>Select Age</option>
               <option v-for="index in 100" :key="index" :value="index">
                   {{ index }}
               </option>
             </select> ~
-            <select id="age" v-model="generalappealform.maxage" class="w-max ml-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select id="age" v-model="generalappealform.max_age" class="w-max ml-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option>Select Age</option>
               <option v-for="index in computedArr" :key="index" :value="index">
                   {{ index }}
@@ -263,15 +263,15 @@ export default {
 
 const gender = ref("");
 
-const strongpoint = ref("");
+const strong_point = ref("");
 const motivation = ref("");
 const solving_feature = ref("");
-const minage= ref(10);
-const maxage= ref(20);
+const min_age= ref(10);
+const max_age= ref(20);
 let generalappealforms = ref([ 
-  {strongpoint: '', motivation: '',solving_feature:'',minage:10,maxage:20,gender:''},
-  {strongpoint: '', motivation: '',solving_feature:'',minage:10,maxage:20,gender:''},
-  {strongpoint: '', motivation: '',solving_feature:'',minage:10,maxage:20,gender:''},
+  {strong_point: '', motivation: '',solving_feature:'',min_age:10,max_age:20,gender:''},
+  {strong_point: '', motivation: '',solving_feature:'',min_age:10,max_age:20,gender:''},
+  {strong_point: '', motivation: '',solving_feature:'',min_age:10,max_age:20,gender:''},
 ]);
 let benchmarkforms = ref([ 
   {rival_product_info: '', weak_point: '',improvement:''},
@@ -302,9 +302,10 @@ const row=ref(null);
 function loadData () {
   api.get(`http://159.223.87.212/api/v1/products/${route.params.id}`, { headers: authHeader() })
       .then((response) => {
-        console.log("row.value")
         row.value = response.data.data;
-        console.log(row.value)
+        console.log(row.value);
+        getAppealTargets(row.value.id);
+        getBenchmarks(row.value.id);
       })
       .catch(() => {
         console.log('not ht')
@@ -495,9 +496,9 @@ const showrivalheadlines = ref(false);
 const submitappeal = (i) => {
   const appealdata= {
   product_id:route.params.id,
-  strong_point:generalappealforms.value[i].strongpoint,
-    min_age: generalappealforms.value[i].minage,
-    max_age: generalappealforms.value[i].maxage,
+  strong_point:generalappealforms.value[i].strong_point,
+    min_age: generalappealforms.value[i].min_age,
+    max_age: generalappealforms.value[i].max_age,
     gender: generalappealforms.value[i].gender,
     motivation:generalappealforms.value[i].motivation,
     solving_feature:generalappealforms.value[i].solving_feature
@@ -570,13 +571,13 @@ function getProductHeadlines (product_id,appealtargetid) {
 
 const computedArr = computed(() => {
   let arr = [];
-      for (var i = minage.value; i <= 100; i++)
+      for (var i = min_age.value; i <= 100; i++)
         arr.push(i);
   return arr;
 })  
 
 const addgeneralappealrow = () => {
-  generalappealforms.value = [...generalappealforms.value,  {strongpoint: '', motivation: '',solving_feature:'',minage:10,maxage:20,gender:''}];
+  generalappealforms.value = [...generalappealforms.value,  {strong_point: '', motivation: '',solving_feature:'',min_age:10,max_age:20,gender:''}];
 }
 const addbenchmarkrow = () => {
   benchmarkforms.value = [...benchmarkforms.value,  {rival_product_info: '', weak_point: '',improvement:''}];
@@ -602,9 +603,30 @@ function toggle(id) {
       togel.value[id] = !togel.value[id];
     }
 
-    
-return { row,pointslistsGA, pointslistsBC, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, rownumber2,isHiddenGA,isHiddenBC,computedArr,minage,maxage,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,
-      toggle,strongpoint,submitappeal,submitbenchmark,motivation,solving_feature,gender,addgeneralappealrow,headlines,rivalheadlines,deleteRow,deleteHeadline,addbenchmarkrow,deleteRivalRow,deleteRivalHeadline};
+function getAppealTargets (pid) {
+      api.get(`http://159.223.87.212/api/v1/products/appeal-target/?product_id=`+pid, { headers: authHeader() })
+      .then((response) => {
+        generalappealforms.value  = response.data.data.appeal_targets
+        console.log(generalappealforms.value);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+}  
+
+function getBenchmarks (pid) {
+      api.get(`http://159.223.87.212/api/v1/benchmark/?product_id=`+pid, { headers: authHeader() })
+      .then((response) => {
+        benchmarkforms.value  = response.data.data.benchmarks
+        console.log(benchmarkforms.value);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+}  
+
+return { row,pointslistsGA, pointslistsBC, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, rownumber2,isHiddenGA,isHiddenBC,computedArr,min_age,max_age,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,
+      toggle,strong_point,submitappeal,submitbenchmark,motivation,solving_feature,gender,addgeneralappealrow,headlines,rivalheadlines,deleteRow,deleteHeadline,addbenchmarkrow,deleteRivalRow,deleteRivalHeadline};
   }
  
 }
