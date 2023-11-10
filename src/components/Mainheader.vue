@@ -11,11 +11,11 @@
       <div class="flex items-center sm:space-x-2 justify-end">
         <!-- <LogoutIcon class="icon"/> -->
         <ul id="nav-mobile" class="right mb-0 flex">
-                  <li class="mr-2">
+                  <li class="mr-2" v-if="!currentUser">
                       <router-link to="/login"> <button class="text-xs hover:text-white font-semibold text-white px-4 py-2  bg-blue-500 hover:bg-blue-600 rounded-md" >Log In</button>
                        </router-link>
                   </li>
-                  <li class="mr-2">
+                  <li class="mr-2" v-if="!currentUser">
                       <router-link to="/register"> <button class="text-xs hover:text-white font-semibold text-white px-4 py-2  bg-blue-500 hover:bg-blue-600 rounded-md" >Sign Up</button>
                        </router-link>
                   </li>
@@ -26,7 +26,8 @@
           </router-link>
         </li>
         <li class="nav-item mr-2">
-          <a class="nav-link" @click.prevent="logOut"> LogOut
+          <a class="nav-link" @click.prevent="logOut">  <button class="text-xs hover:text-white font-semibold text-white px-4 py-2  bg-blue-500 hover:bg-blue-600 rounded-md" > LogOut</button>
+        
           </a>
         </li>
       </div>

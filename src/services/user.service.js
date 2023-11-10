@@ -5,7 +5,7 @@ const API_URL = 'http://159.223.87.212/api/v1/';
 
 class UserService {
   getPublicContent() {
-    return axios.get(API_URL + 'auth/me');
+    return axios.get(API_URL + 'auth/me',{ headers: authHeader() });
   }
 
   getUserBoard() {

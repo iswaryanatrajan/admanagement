@@ -24,8 +24,8 @@
   <div>
 <tabs>
   <tab name="General Appeal">
-  <div class="flex">
-  <form class="lg:w-2/3 md:w-full">
+  <div class="flex no-wrap">
+  <form class="">
     <div class="w-full overflow-auto">
     <table class="text-sm text-left text-gray-500 dark:text-gray-400 my-5">
     <thead class="text-xs text-gray-700 uppercase bg-gray-100">
@@ -36,19 +36,19 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="border" v-for="index in rownumber1" :key="index">
+      <tr class="border" v-for="(generalappealform,i) in generalappealforms" v-bind:key="generalappealform.strongpoint">
         <td class="px-4 py-2 font-medium text-gray-700 whitespace-nowrap">
-          <textarea class="p-3 border  border-gray-300 w-100 rounded-lg" rows="14" cols="30"  v-model="strongpoint" placeholder="Enter a strong point"></textarea></td>
+          <textarea class="p-3 border  border-gray-300 w-100 rounded-lg" rows="14" cols="20"  v-model="generalappealform.strongpoint" placeholder="Enter a strong point"></textarea></td>
         <td class="w-1/px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div class="mb-3 flex items-center">
             <label for="age" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100">Age:</label>
-            <select id="age" v-model="minage" class="w-max mr-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select id="age" v-model="generalappealform.minage" class="w-max mr-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option>Select Age</option>
               <option v-for="index in 100" :key="index" :value="index">
                   {{ index }}
               </option>
             </select> ~
-            <select id="age" v-model="maxage" class="w-max ml-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select id="age" v-model="generalappealform.maxage" class="w-max ml-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option>Select Age</option>
               <option v-for="index in computedArr" :key="index" :value="index">
                   {{ index }}
@@ -58,7 +58,7 @@
           </div>
           <div class="mb-3">
             <label for="gender" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100">Gender:</label>
-            <select id="gender" v-model="gender"  class="w-max  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select id="gender" v-model="generalappealform.gender"  class="w-max  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option>Select Gender</option>
               <option>Male （男性）</option>
               <option>Female （女性）</option>
@@ -66,19 +66,19 @@
             </select>
           </div>
           <div class="mb-3">
-          <label for="why" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">ターゲットにする悩みまたは欲しい理由: Why they want to have it?</label>
-          <textarea class="p-3 border border-gray-300 w-full rounded-lg" v-model="motivation" placeholder=""></textarea>
+          <label for="why" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-auto">ターゲットにする悩みまたは欲しい理由:<br/> Why they want to have it?</label>
+          <textarea class="p-3 border border-gray-300 rounded-lg" v-model="generalappealform.motivation" placeholder=""></textarea>
           </div>
           <div>
-          <label for="productfeature" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">どの特徴が、どのように欲しくなるのか、解決するのか:<br> What type of your product feature would solve this issue?</label>
-          <textarea class="p-3 border border-gray-300 w-full rounded-lg" v-model="solving_feature" placeholder=""></textarea>
+          <label for="productfeature" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">どの特徴が、どのように欲しくなるのか、解決するのか:<br/> What type of your product feature would solve this issue?</label>
+          <textarea class="p-3 border border-gray-300 w-full rounded-lg" v-model="generalappealform.solving_feature" placeholder=""></textarea>
           </div>
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap flex flex-start w-max items-center">
          <!--- <button type="button" @click="isHiddenGA = false" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>-->
-        <button type="button" @click="submitappeal" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
+        <button type="button" @click="submitappeal(i)" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
   
-            <svg @click="deleteRow"  class="w-6 h-6 text-grey-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+            <svg @click="deleteRow(i)"  class="w-6 h-6 text-grey-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
                 </svg>  
          
@@ -89,15 +89,15 @@
     </tbody>
   </table>
 </div>
-<button type="button" @click="rownumber1++" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 inline-flex items-center">Add row  
+<button type="button" @click="addgeneralappealrow" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 inline-flex items-center">Add row  
   <svg class="w-3 h-3 ml-1 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
   </svg> </button>
   </form>
-  <div v-show="!isHiddenGA" class="chatgptpoints m-5 lg:w-1/3 md:w-full">
-    <div class="strongpoint1points border p-3 " v-for = "(pointslist,index) in pointslistsGA" :key="index">
+  <div v-show="showheadlines" class="chatgptpoints m-5">
+    <div class="strongpoint1points border p-3">
       <div class="flex items-start justify-between">
-        <h3 class="font-bold ">{{ pointslist.name }}</h3>
+        <h3 class="font-bold ">Product Headlines</h3>
         <button type="button" @click="showModal" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-2 py-2 text-center ml-3 mb-2　inline-flex items-center">
       Revise
     <svg class="w-3 h-3 ml-2 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
@@ -111,23 +111,23 @@
 </div>
         <table class="text-sm text-left text-gray-500 dark:text-gray-400 my-2">
           <tbody>
-            <tr v-for = "(point) in pointslist.points" :key="point.id">
-              <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap"><input type="checkbox" value=point.id v-model="checkedtext" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"></td>
-              <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap">  <span  v-if = "!togel[point.id]">{{ point.message }}</span>
-              <textarea v-else class="p-3 border w-100"  v-model="point.message" :placeholder="point.message"  ></textarea></td>
-              <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap"> {{ point.message.trim().length}}</td>
-              <td class="flex px-2 py-1">
+            <tr v-for = "(headline,i) in headlines" :key="headline.id">
+             <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap">  <span  v-if = "!toggle[headline.id]">{{ headline.headline }}</span>
+              <textarea v-else class="p-3 border w-full"  v-model="headline.headline" :placeholder="headline.headline"  ></textarea></td>
+             <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap"> {{ headline.headline.trim().length}}</td>
+              <td class="px-2 py-1">
+              <span class="flex">
                 <button
               type="button"
               class="mr-3"
-              :class="{ togel: togel[point.id] }"
-              @click.prevent="toggle(point.id)"
+              :class="{ togel: togel[headline.id] }"
+              @click.prevent="toggle(headline.id)"
             >
-              {{ !togel[point.id] ? "edit" : "close" }}
+              {{ !togel[headline.id] ? "Edit" : "Save" }}
             </button>
-                <svg @click="deletetext"  class="w-4 h-4 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                <svg @click="deleteHeadline(i)"  class="w-4 h-4 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
-                </svg>  
+                </svg>  </span>
               </td>
             </tr>
           </tbody>
@@ -140,7 +140,7 @@
 </tab>
 <tab name="Benchmark Comparison">
   <div class="flex">
-  <form class="w-1/2">
+  <form class="">
     <div class="w-full overflow-auto">
     <table class="text-sm text-left text-gray-500 dark:text-gray-400 my-5">
     <thead class="text-xs text-gray-700 uppercase bg-gray-100">
@@ -152,25 +152,25 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="border"  v-for="index in rownumber2" :key="index">
+      <tr class="border"   v-for="(benchmarkform,i) in benchmarkforms" v-bind:key="benchmarkform.weak_point">
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <label for="rivalpdtinfo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">誰をターゲットにしますか？</label>
-          <textarea class="p-3 border border-gray-300 rounded-lg w-100"  style="height:100%;width:100%;display:block" v-model="rivalpdtinfo" placeholder="Rival product information"></textarea></td>
+          <textarea class="p-3 border border-gray-300 rounded-lg w-100"  style="height:100%;width:100%;display:block" v-model="benchmarkform.rival_product_info" placeholder="Rival product information"></textarea></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div class="">
           <label for="weakpoint1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">ターゲットのウィークポイント</label>
-          <textarea class="p-3 border border-gray-300 rounded-lg w-full" v-model="weakpoint" placeholder="Please enter weak point"></textarea>
+          <textarea class="p-3 border border-gray-300 rounded-lg w-full" v-model="benchmarkform.weak_point" placeholder="Please enter weak point"></textarea>
           </div>
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div>
           <label for="productfeature" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">ターゲットのウィークポイントをどのように改善していますか？</label>
-          <textarea class="p-3 border border-gray-300 rounded-lg  w-full" v-model="productfeature" placeholder=""></textarea>
+          <textarea class="p-3 border border-gray-300 rounded-lg  w-full" v-model="benchmarkform.improvement" placeholder=""></textarea>
           </div>
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap flex flex-start">
-          <button type="button" @click="isHiddenBC = false" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
-            <svg @click="deleteRow"  class="w-6 h-6 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+          <button type="button" @click="submitbenchmark(i)" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
+            <svg @click="deleteRivalRow(i)"  class="w-6 h-6 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
                 </svg>  
          
@@ -180,17 +180,17 @@
     </tbody>
   </table>
 </div>
-<button type="button" @click="rownumber2++" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 inline-flex items-center">Add row  
+<button type="button" @click="addbenchmarkrow" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 inline-flex items-center">Add row  
   <svg class="w-3 h-3 ml-1 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16"/>
   </svg> </button>
 
  
   </form>
-  <div v-show="!isHiddenBC" class="chatgptpoints p-5 w-1/2" >
-    <div class="strongpoint1points border p-3 mb-3" v-for = "(pointslist,index) in pointslistsBC" :key="index">
+  <div v-show="showrivalheadlines" class="chatgptpoints p-5" >
+    <div class="strongpoint1points border p-3 mb-3">
       <div class="flex items-start justify-between">
-        <h3 class="font-bold ">{{ pointslist.name }}</h3>
+        <h3 class="font-bold ">Rival Headlines</h3>
         <button type="button" @click="showModal" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-2 py-2 text-center ml-3 mb-2　inline-flex items-center">
       Revise
     <svg class="w-3 h-3 ml-2 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
@@ -204,24 +204,22 @@
 </div>
 <div>
       <table class="text-sm text-left text-gray-500 dark:text-gray-400 my-2"><tbody>
-      <tr v-for = "(point) in pointslist.points" :key="point.id">
-              <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap">
-                <input type="checkbox" value=point.id v-model="checkedtext" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"></td>
+      <tr v-for = "(rivalheadline,i) in rivalheadlines" :key="rivalheadline.id" >
               <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap"> 
-                <span  v-if = "!togel[point.id]">{{ point.message }}</span>
-              <textarea v-else class="p-3 border w-100"  v-model="point.message" :placeholder="point.message"  ></textarea></td>
-              <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap"> {{ point.message.trim().length}}</td>
+                <span  v-if = "!togel[rivalheadline.id]">{{ rivalheadline.headline }}</span>
+              <textarea v-else class="p-3 border w-100"  v-model="rivalheadline.headline" :placeholder="rivalheadline.headline"  ></textarea></td>
+              <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap"> {{ rivalheadline.headline.trim().length}}</td>
               <td class="flex px-2 py-1">
                 <button
               type="button"
               class="mr-3"
-              :class="{ togel: togel[point.id] }"
-              @click.prevent="toggle(point.id)"
+              :class="{ togel: togel[rivalheadline.id] }"
+              @click.prevent="toggle(rivalheadline.id)"
             >
-              {{ !togel[point.id] ? "edit" : "close" }}
+              {{ !togel[rivalheadline.id] ? "edit" : "close" }}
             </button>
                 
-                <svg @click="deletetext"  class="w-4 h-4 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+                <svg @click="deleteRivalHeadline(i)"  class="w-4 h-4 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
                 </svg>  
               </td>
@@ -268,9 +266,18 @@ const gender = ref("");
 const strongpoint = ref("");
 const motivation = ref("");
 const solving_feature = ref("");
-const minage= ref(1);
-const maxage= ref(1);
-let rownumber1 = ref(3);
+const minage= ref(10);
+const maxage= ref(20);
+let generalappealforms = ref([ 
+  {strongpoint: '', motivation: '',solving_feature:'',minage:10,maxage:20,gender:''},
+  {strongpoint: '', motivation: '',solving_feature:'',minage:10,maxage:20,gender:''},
+  {strongpoint: '', motivation: '',solving_feature:'',minage:10,maxage:20,gender:''},
+]);
+let benchmarkforms = ref([ 
+  {rival_product_info: '', weak_point: '',improvement:''},
+  {rival_product_info: '', weak_point: '',improvement:''},
+  {rival_product_info: '', weak_point: '',improvement:''},
+]);
 let rownumber2 = ref(3);
 let isHiddenGA = ref(true);
 let isHiddenBC = ref(true);
@@ -408,34 +415,158 @@ const pointslistsGA = ref(
 
   ])
 
+const headlines = ref([
+      {
+        "id": "654df921822cec8dd74e3e9d",
+        "headline": "For those who want to reduce background noise.",
+        "product_id": "65464683eb907fa316a36a59",
+        "appeal_target_id": "654df82380cb4b3e6f099363",
+        "seq": 1
+      },
+      {
+        "id": "654df922822cec8dd74e3f48",
+        "headline": "For those who want to be more productive.",
+        "product_id": "65464683eb907fa316a36a59",
+        "appeal_target_id": "654df82380cb4b3e6f099363",
+        "seq": 2
+      },
+      {
+        "id": "654df922822cec8dd74e4065",
+        "headline": "For those who want to better concentrate.",
+        "product_id": "65464683eb907fa316a36a59",
+        "appeal_target_id": "654df82380cb4b3e6f099363",
+        "seq": 3
+      },
+      {
+        "id": "654df923822cec8dd74e4121",
+        "headline": "For those who want to enjoy their music more.",
+        "product_id": "65464683eb907fa316a36a59",
+        "appeal_target_id": "654df82380cb4b3e6f099363",
+        "seq": 4
+      },
+      {
+        "id": "654df923822cec8dd74e4216",
+        "headline": "For those who want to feel more connected.",
+        "product_id": "65464683eb907fa316a36a59",
+        "appeal_target_id": "654df82380cb4b3e6f099363",
+        "seq": 5
+      },
+      {
+        "id": "654df924822cec8dd74e42d1",
+        "headline": "For those who want to make calls without distractions.",
+        "product_id": "65464683eb907fa316a36a59",
+        "appeal_target_id": "654df82380cb4b3e6f099363",
+        "seq": 6
+      },
+      {
+        "id": "654df924822cec8dd74e43bf",
+        "headline": "For those who want to hear better.",
+        "product_id": "65464683eb907fa316a36a59",
+        "appeal_target_id": "654df82380cb4b3e6f099363",
+        "seq": 7
+      },
+      {
+        "id": "654df925822cec8dd74e44af",
+        "headline": "For those who want to be more relaxed.",
+        "product_id": "65464683eb907fa316a36a59",
+        "appeal_target_id": "654df82380cb4b3e6f099363",
+        "seq": 8
+      },
+      {
+        "id": "654df925822cec8dd74e459e",
+        "headline": "For those who want to be more present.",
+        "product_id": "65464683eb907fa316a36a59",
+        "appeal_target_id": "654df82380cb4b3e6f099363",
+        "seq": 9
+      },
+      {
+        "id": "654df926822cec8dd74e467c",
+        "headline": "For those who want to improve their listening experience.",
+        "product_id": "65464683eb907fa316a36a59",
+        "appeal_target_id": "654df82380cb4b3e6f099363",
+        "seq": 10
+      }
+    ]);
 
+const rivalheadlines =ref([]);
+const showheadlines = ref(false);
+const showrivalheadlines = ref(false);
 
-const submitappeal = () => {
+const submitappeal = (i) => {
   const appealdata= {
   product_id:route.params.id,
-  strong_point:strongpoint.value,
-    min_age: minage.value,
-    max_age: maxage.value,
-    gender: gender.value,
-    motivation:motivation.value,
-    solving_feature:solving_feature.value
+  strong_point:generalappealforms.value[i].strongpoint,
+    min_age: generalappealforms.value[i].minage,
+    max_age: generalappealforms.value[i].maxage,
+    gender: generalappealforms.value[i].gender,
+    motivation:generalappealforms.value[i].motivation,
+    solving_feature:generalappealforms.value[i].solving_feature
 };
   console.log(appealdata);
-  api.post(`http://159.223.87.212/api/v1/products/appeal-target/`,appealdata, { headers: authHeader() })
+ api.post(`http://159.223.87.212/api/v1/products/appeal-target/`,appealdata, { headers: authHeader() })
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data.data);
+        const product_id = response.data.data.product_id;
+        const appealtargetid = response.data.data.id;
+        getProductHeadlines(product_id,appealtargetid);
       })
       .catch(() => {
         console.log('not ht')
-       /* $q.notify({
-          color: 'negative',
-          position: 'top',
-          message: 'Loading failed',
-          icon: 'report_problem'
-        })*/
       })
-
 }
+
+const submitbenchmark = (i) => {
+  const appealdata= {
+  product_id:route.params.id,
+  rival_product_info:benchmarkforms.value[i].rival_product_info,
+  weak_point: benchmarkforms.value[i].weak_point,
+  improvement: benchmarkforms.value[i].improvement,
+};
+  console.log(appealdata);
+ api.post(`http://159.223.87.212/api/v1/benchmark/`,appealdata, { headers: authHeader() })
+      .then((response) => {
+        console.log(response.data.data);
+        const product_id = response.data.data.product_id;
+        const benchmarkid = response.data.data.id;
+        getRivalHeadlines(product_id,benchmarkid);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+}
+
+function getProductHeadlines (product_id,appealtargetid) {
+  const data={
+    product_id:product_id,
+    appeal_target_id:appealtargetid
+  }
+  api.post(`http://159.223.87.212/api/v1/headlines/`,data,{ headers: authHeader() })
+      .then((response) => {
+        console.log(response.data.data);
+        headlines.value= response.data.data.headlines;
+        showheadlines.value=true;
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+  }
+
+  function getRivalHeadlines (product_id,benchmarkid) {
+  const data={
+    product_id:product_id,
+    benchmark_id:benchmarkid
+  }
+  api.post(`http://159.223.87.212/api/v1/headlines/rival`,data,{ headers: authHeader() })
+      .then((response) => {
+        console.log(response.data.data.headlines);
+        rivalheadlines.value= response.data.data.headlines;
+        showrivalheadlines.value=true;
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+  }
+
 
 const computedArr = computed(() => {
   let arr = [];
@@ -444,15 +575,36 @@ const computedArr = computed(() => {
   return arr;
 })  
 
+const addgeneralappealrow = () => {
+  generalappealforms.value = [...generalappealforms.value,  {strongpoint: '', motivation: '',solving_feature:'',minage:10,maxage:20,gender:''}];
+}
+const addbenchmarkrow = () => {
+  benchmarkforms.value = [...benchmarkforms.value,  {rival_product_info: '', weak_point: '',improvement:''}];
+}
+const deleteRow = (i) => {
+  generalappealforms.value.splice(generalappealforms.value[i], 1);
+}
+const deleteRivalRow = (i) => {
+  benchmarkforms.value.splice(benchmarkforms.value[i], 1);
+}
+
+const deleteHeadline = (i) => {
+  headlines.value.splice(headlines.value[i], 1);
+}
+
+const deleteRivalHeadline = (i) => {
+  rivalheadlines.value.splice(rivalheadlines.value[i], 1);
+}
+
 const togel = ref(pointslistsGA.value.reduce((agg, item) => ({ ...agg, [item.id]: false }), {}))
 
 function toggle(id) {
       togel.value[id] = !togel.value[id];
     }
 
-
-return { row,pointslistsGA, pointslistsBC, rownumber1,rownumber2,isHiddenGA,isHiddenBC,computedArr,minage,maxage,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,
-      toggle,strongpoint,submitappeal,motivation,solving_feature,gender};
+    
+return { row,pointslistsGA, pointslistsBC, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, rownumber2,isHiddenGA,isHiddenBC,computedArr,minage,maxage,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,
+      toggle,strongpoint,submitappeal,submitbenchmark,motivation,solving_feature,gender,addgeneralappealrow,headlines,rivalheadlines,deleteRow,deleteHeadline,addbenchmarkrow,deleteRivalRow,deleteRivalHeadline};
   }
  
 }

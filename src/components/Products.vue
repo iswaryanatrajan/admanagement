@@ -10,71 +10,11 @@
         Back</button><h3 class="font-bold text-xl">Products</h3>
       </div>
       <div class="relative overflow-x-auto mt-10">
-    <!--
-    <table class="w-3/4 text-sm text-left text-gray-500 dark:text-gray-400">
-    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-      <tr>
-        <th class="px-6 py-3">S.No</th>
-        <th class="px-6 py-3">Products</th>
-        <th class="px-6 py-3">Image</th>
-        <th class="px-6 py-3">ASIN</th>
-        <th class="px-6 py-3"></th>
-      </tr>
-    </thead>
-    <tbody>
-
-      <template v-for = "(product) in products">
-        <tr class="border-b" :id="`accordion-collapse-heading-${product.id}`" >
-          <td class="px-6 py-4 font-medium text-gray-700 dark:text-blue-500  whitespace-nowrap">
-            {{ product.id }}
-      </td>
-          <td class="px-6 py-4 font-medium text-gray-700 dark:text-blue-500  whitespace-nowrap">
-            {{ product.name }}</td>
-          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><img width="50" :src=product.imgsrc></td>
-          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{product.asin}}</td>
-          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-              <button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">Edit</button>
-              <RouterLink :to= "{ name: 'productinfo'}"><button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">見出しの作成</button></RouterLink>
-        </td>
-        </tr>
-
-        <tr class="border-b">
-          <td colspan="5">
-            <div class="relative overflow-x-auto">
-      <table class="w-3/4 text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-      <tr>
-        <th class="px-6 py-3">Serial No.</th>
-        <th class="px-6 py-3">Products</th>
-        <th class="px-6 py-3">ASIN</th>
-        <th class="px-6 py-3"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="border-b" v-for = "childpdt in product.childpdts">
-          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{ childpdt.id }}</td>
-          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{childpdt.name}}</td>
-          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{childpdt.asin}}</td>
-          <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-       </td>
-        </tr>
-    </tbody>
-    </table>
-    </div>
-          </td>
-        </tr>
-
-            </template>
-          
-         
-
-    </tbody>
-  </table>-->
   <div class="q-pa-md">
   <q-btn @click="addprompt = true" color="primary" label="Add" ></q-btn>
 
   <q-dialog v-model="addprompt" persistent>
-      <q-card style="width: 700px; max-width: 80vw;">
+      <q-card style="width: 900px; max-width: 80vw;">
         <q-toolbar>
           <q-toolbar-title>Add Product</q-toolbar-title>
 
@@ -91,46 +31,38 @@
         </q-card-section>
         <q-card-section>
           <div class="">Product Image</div>
-          <q-file
-        style="max-width: 300px"
-        v-model="filesImages"
-        filled
-        dense
-        label="Add image"
-        accept=".jpg, image/*"
-        @rejected="onRejected"
-      />
+          <input type="file" @change="handleFileUpload" name="image" id="image"  accept="image/*" />
+
         </q-card-section>
-        <q-btn size="sm" color="primary" round dense @click="addchild()" icon="add" />
+        <q-btn  color="primary" @click="addProduct()" icon="add" label="Add Product"/>
       </div>
+
+       <!-- Child Product -->
+
       <div class="flex items-center pl-5" v-for="(childproduct,i) in childproducts" v-bind:key="childproduct">
         <q-card-section>
           <div class="">Child Product Name</div>
-          <q-input dense v-model="child_name" autofocus></q-input>
+          <q-input dense v-model="childproduct.child_name" autofocus></q-input>
         </q-card-section>
         <q-card-section>
           <div class="">ASIN</div>
-          <q-input dense v-model="child_asin"></q-input>
+          <q-input dense v-model="childproduct.child_asin"></q-input>
         </q-card-section>
         <q-card-section>
           <div class="">Product Image</div>
-          <q-file
-        style="max-width: 300px"
-        v-model="filesImages"
-        dense
-        filled
-        label="Add image"
-        accept=".jpg, image/*"
-        @rejected="onRejected"
-      />
+          <input type="file"  @change="handleFileUpload" name="child_image" id="child_image"  accept="image/*" />
         </q-card-section>
-        <q-btn size="sm" color="primary" round dense @click="deletechild(i)" icon="delete" />
-      </div>
+        <q-card-section>
+       <q-btn size="sm" color="primary" round dense @click="deletechild(i)" icon="delete" />
+        <q-btn size="sm" color="primary" round dense @click="addanotherchild(i)" icon="add" />
+      </q-card-section>
+    
 
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Cancel" v-close-popup></q-btn>
-          <q-btn flat label="Save" v-close-popup></q-btn>
+          <q-btn flat label="Save" @click="addchildpdt(i)" v-close-popup></q-btn>
         </q-card-actions>
+      </div>
       </q-card>
     </q-dialog>
 
@@ -161,7 +93,7 @@
         <template v-slot:body="props" >
       <q-tr :props="props">
           <q-td auto-width>
-            <q-btn size="sm" color="primary" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'" />
+            <q-btn  size="sm" color="primary" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'" />
           </q-td>
           <q-td
             v-for="col in props.cols"
@@ -169,9 +101,10 @@
             :props="props"
           >
           <span v-if="col.name !='image'" >
-              {{ col.value }}</span>
+             {{ col.value }}
+          </span>
 
-              <img v-if="col.name =='image'" width='50' :src="props.row.image" />
+              <img v-if="col.name =='image'" width='50' :src="productImages[props.row.id]" />
           </q-td>
           <q-td class="q-pa-md q-gutter-sm">
           <q-icon name="edit" size="sm" @click="onEdit(props.row)" />
@@ -181,26 +114,73 @@
           </RouterLink>
         </q-td>
         </q-tr>
-        <!--
-        <q-tr 
-            :props="props"
+        
+        <q-tr class="bg-neutral-50 childtr"
             v-show="props.expand" 
+            v-for="childRow in props.row.child_products" 
+          :key="childRow._id"
+          :props="props"  
           >  
-          <q-td colspan="100%">
+        
+          <q-td  auto-width @click="  console.log(childRow);"></q-td>
+         <!--<q-td v-for="(value, key) in childRow" :key="key">--> 
+          <q-td>
+          {{ childRow.serial_no }}
+        </q-td>
+            <q-td>
+          {{ childRow.product_name }}
+        </q-td>
+        <q-td>
+          <img width="30" :src="childproductImages[childRow._id]" />
+        </q-td>
+        <q-td>
+          {{ childRow.asin }}
+        </q-td>
+        <q-td class="q-pa-md q-gutter-sm">
+            <q-icon name="edit" size="sm" @click="onEdit(props.row)" />
+            <q-icon name="delete" size="sm" @click="onDelete(props.row)" />
+            <RouterLink :to= "{ name: 'productinfo', params: { id: props.row.id}}">
+            <q-btn  color="primary" label="見出しの作成" ></q-btn>
+            </RouterLink>
+        </q-td>
+        
+   <!-- <q-td colspan="100%" >
             <q-table             
             hide-bottom                         
-               :rows="props.row.childpdts"
-               :columns="columnsChilds"
+               :rows="props.row.child_products"
+               :columns="childcolumns"
                style="background:#fff"> 
+
+                <q-tr  :props="props">
+          <q-td     v-for="col in props.cols"
+            :key="col.name"
+            :props="props">
+            <span v-if="col.name !='images'" >
+              {{ col.name }} {{ col.value }}</span>
+
+            <img v-if="col.name =='images'" width='50' :src="childproductImages[props.row.child_products.id]" /> 
+           </q-td>
+              <q-td class="q-pa-md q-gutter-sm">
+          <q-icon name="edit" size="sm" @click="onEdit(props.row)" />
+          <q-icon name="delete" size="sm" @click="onDelete(props.row)" />
+          <RouterLink :to= "{ name: 'productinfo', params: { id: props.row.id}}">
+          <q-btn  color="primary" label="見出しの作成" ></q-btn>
+          </RouterLink>
+        </q-td>
+              </q-tr>
+              
           </q-table>   
-          </q-td>
+          </q-td> -->
            
-        </q-tr>-->
+        </q-tr>
 
        
       </template>
     </q-table>
+
   </div>
+
+
 </div>
   </div>
 
@@ -208,14 +188,18 @@
   </template>
 
 <script >
-import { ref, watch} from "vue";
+import { ref,reactive, watch} from "vue";
 import { api } from '../boot/axios'
 import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import UserService from "../services/user.service";
+import axios from 'axios';
+import authHeader from '../services/auth-header';
+
 
 export default {
   name:'Products',
+
   setup() {
     const route = useRoute();
     const $q = useQuasar();
@@ -223,9 +207,20 @@ export default {
     const product_name= ref("");
     const asin= ref("");
     const image_src= ref("");
+    const pdtimage= ref("");
     const filesImages = ref(null);
+    let sno=ref(0);
+    const id=ref("");
     const childproduct=ref(0);
-    const childproducts = ref([{child_name: '', asin: '',image_src:''}]);
+    const childproducts = ref([]);
+    const productImages = ref({});
+    const childproductImages = ref({});
+
+    const child_name=ref("");
+    const child_asin=ref("");
+    const childimage_src = ref("");
+    const parent_id=ref("");
+
 
   //const data = ref(null)
 
@@ -235,7 +230,7 @@ export default {
     required: true,
     label: 'Serial No.',
     align: 'left',
-    field: row => row.id,
+    field: row => row.serial_no,
     format: val => `${val}`,
     sortable: true
   },
@@ -256,7 +251,7 @@ const childcolumns = ref([
     required: true,
     label: 'Serial No.',
     align: 'left',
-    field: row => row.id,
+    field: row => row.serial_no,
     format: val => `${val}`,
     sortable: true
   },
@@ -265,56 +260,28 @@ const childcolumns = ref([
     required: true,
     label: 'Product Name',
     align: 'left',
-    field: row => row.name,
+    field: row => row.product_name,
     sortable: true
   },
+
+  { name: 'images', align: 'center', label: 'Image', field: 'image_id' },
   { name: 'asin', align: 'center', label: 'ASIN', field: 'asin' },
 ]);
-    
-  /*  const rows = ref([{
-      id:'001',
-      name:'Product Name 1',
-      asin:'B0EOFU39234',
-      imgsrc:'../src/assets/pdtimg.jpg',
-      childpdts:[{
-        id:'001a',
-        name:'Child Name 1',
-        asin:'B0EOFU39234',
-      },
-      {
-        id:'001b',
-        name:'Child Name 2',
-        asin:'B0EOFU39245',
-      }
-    ]},
-    {
-      id:'002',
-      name:'Product Name 2',
-      asin:'B0EOFU39235',
-      imgsrc:'../src/assets/pdtimg.jpg',
-      childpdts:[{
-        id:'001a',
-        name:'Child Name 1',
-        asin:'B0EOFU39234',
-      },
-      {
-        id:'001b',
-        name:'Child Name 2',
-        asin:'B0EOFU39245',
-      }
-    ]}
-  ])*/
+
   const rows = ref(null);
   const onEdit = (row) => {
       console.log(`Editing row - '${row.name}'`)
+
     }
+
+
     
     const onDelete = (row) => {
-      api.delete(`http://159.223.87.212/api/v1/products/${row.id}`)
+      api.delete(`http://159.223.87.212/api/v1/products/${row.id}`,{headers:authHeader()})
       .then((response) => {
         console.log(response.data.message)
         console.log(`Deleted post with ID ${row.id}`);
-        //loadData();
+        loadData();
         //return response;
       })
       .catch(() => {
@@ -341,30 +308,134 @@ const childcolumns = ref([
     UserService.getProducts()
       .then((response) => {
         rows.value = response.data.data.products
-        console.log(rows.value)
+        console.log(rows.value);
+        for (const row of rows.value) {
+        if (row.image_id) {
+          fetchImage(row.id, row.image_id);
+        }
+      let childproducts = row.child_products;
+
+        if (childproducts) {
+          childproducts.map(childProduct =>  fetchchildImage(row.id,childProduct._id,childProduct.image_id));
+        }
+      }
       })
       .catch(() => {
         console.log('not ht')
-        /*$q.notify({
-          color: 'negative',
-          position: 'top',
-          message: 'Loading failed',
-          icon: 'report_problem'
-        })*/
       })
   }
   loadData();
-  const addchild = () => {
-    childproducts.value = [...childproducts.value, {child_name: '', asin: '',image_src:''}]
- }
-  const deletechild = (i) => {
-    childproducts.value.splice(childproducts.value[i], 1)
+
+  const fetchImage = async (productId, imageId) => {
+      try {
+      console.log(imageId);
+        const response = await axios.get(`http://159.223.87.212/api/v1/products/images/${imageId}`, {
+          responseType: 'arraybuffer',
+        });
+
+        const image = `data:image/jpeg;base64,${btoa(new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), ''))}`;
+        
+        productImages.value[productId] = image;
+        //console.log(productImages.value[productId]);
+      } catch (error) {
+        console.error(`Failed to fetch image for product ID ${productId}:`, error);
+      }
+    };
+
+   const fetchchildImage = async (productId,childId, imageId) => {
+      try {
+      console.log(imageId);
+        const response = await axios.get(`http://159.223.87.212/api/v1/products/images/${imageId}`, {
+          responseType: 'arraybuffer',
+        });
+
+        const image = `data:image/jpeg;base64,${btoa(new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), ''))}`;
+        
+        childproductImages.value[childId] = image;
+        //console.log(productImages.value[productId]);
+      } catch (error) {
+        console.error(`Failed to fetch image for product ID ${productId}:`, error);
+      }
+    };
+
+
+  const image= ref('');
+  const child_image= ref('');
+  const imagePath= ref('');
+  const selectedImage = ref(null);
+
+
+  
+  /*const handleChildFileUpload = (e)  => {
+   selectedImage.value = e.target.files[0];
+    console.log(selectedImage);
+  }*/
+
+  const handleFileUpload = (e)  => {
+   selectedImage.value = e.target.files[0];
+    console.log(selectedImage);
+    }
+
+
+
+  const addProduct = () => {
+    const formData = new FormData();
+    sno.value++;
+      formData.append('image', selectedImage.value);
+      formData.append('product_name', product_name.value);
+      formData.append('asin', asin.value);
+      formData.append('serial_no', String(sno.value));
+      formData.append('product_info', product_name.value);
+
+    axios.post("http://159.223.87.212/api/v1/products",formData,{headers:authHeader()}) .then((response) => {
+        console.log(response.data);
+        parent_id.value =response.data.data.id;
+        console.log(parent_id.value);
+        childproducts.value = [...childproducts.value, {child_name: '', child_asin: '',childimage_src:''}]
+      })
+      .catch(() => {
+        console.log('not ht');
+      })
+   
  }
 
-  return {rows,
+ const addchildpdt = (i) => {
+  console.log(childproducts.value);
+  const formData = new FormData();
+      formData.append('image', selectedImage.value);
+      formData.append('product_name', childproducts.value[i].child_name);
+      formData.append('asin', childproducts.value[i].child_asin);
+      formData.append('serial_no', String(sno.value));
+      formData.append('product_info', childproducts.value[i].child_name);
+      formData.append('parent_id',parent_id.value);
+      console.log(formData);
+      axios.post("http://159.223.87.212/api/v1/products/child-products",formData,{headers:authHeader()}) .then((response) => {
+        console.log(response.data);
+        loadData();
+      })
+      .catch(() => {
+        console.log('not ht');
+      })
+   
+
+ }
+
+ const addanotherchild = (i) => {
+  addchildpdt(i);
+  childproducts.value = [...childproducts.value, {child_name: '', child_asin: '',childimage_src:''}]
+ }
+
+  const deletechild = (i) => {
+    childproducts.value.splice(childproducts.value[i], 1);
+   /* axios.delete("http://159.223.87.212/api/v1/products/"+product_id,{headers:authHeader()}) .then((response) => {
+        console.log(response.data);
+      })*/
+ }
+
+  return {sno,pdtimage,rows,image,imagePath,handleFileUpload,selectedImage,productImages,childproductImages,id,
       columns,
-      onEdit,
-      onDelete,childcolumns,addprompt,product_name,asin,image_src,filesImages,childproduct,childproducts,addchild,deletechild}
+      onEdit,child_name,child_asin,childimage_src,parent_id,
+      onDelete,childcolumns,addprompt,product_name,asin,image_src,filesImages,childproduct,childproducts,addProduct,addchildpdt,addanotherchild,deletechild}
   }
 }
 

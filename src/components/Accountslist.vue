@@ -53,10 +53,19 @@ export default {
         })
       })
   }*/
- 
+
+
   mounted() {
     console.log("in mounted");
-    UserService.getAdminBoard().then(
+    UserService.getPublicContent().then(
+      (response) => {
+        console.log(response.data);
+        if(response.data.data.role=="user")
+        {
+          this.$router.push("/products");
+        }
+        else if(response.data.data.role=="admin"){
+          UserService.getAdminBoard().then(
       (response) => {
         console.log(response.data);
         this.accounts = response.data.data.accounts;
@@ -70,8 +79,23 @@ export default {
           error.toString();
       }
     );
+        }
+      },
+      (error) => {
+        this.content =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+      }
+    );
   },
+
 };
+    /*
+  },
+};*/
  /*fetch('http://159.223.87.212/api/v1/accounts/')
     .then(response => response.json())
     .then(data => accounts.value = data);
