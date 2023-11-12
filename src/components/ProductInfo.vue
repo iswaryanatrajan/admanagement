@@ -68,7 +68,7 @@ function loadData () {
     if(productInfo==""){
         return;
     }
-    api.put(`http://159.223.87.212/api/v1/products/${route.params.id}`,{"product_info":productInfo.value}, { headers: authHeader() })
+    api.post(`http://159.223.87.212/api/v1/products/product-info`,new URLSearchParams({"product_id":row.value.id,"product_info":productInfo.value}), { headers: authHeader() })
         .then((res) => {
           //success = true
           console.log(res);

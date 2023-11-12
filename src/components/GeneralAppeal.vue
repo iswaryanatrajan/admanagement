@@ -509,7 +509,7 @@ const submitappeal = (i) => {
         console.log(response.data.data);
         const product_id = response.data.data.product_id;
         const appealtargetid = response.data.data.id;
-        getProductHeadlines(product_id,appealtargetid);
+        getProductHeadlines(appealtargetid);
       })
       .catch(() => {
         console.log('not ht')
@@ -529,19 +529,18 @@ const submitbenchmark = (i) => {
         console.log(response.data.data);
         const product_id = response.data.data.product_id;
         const benchmarkid = response.data.data.id;
-        getRivalHeadlines(product_id,benchmarkid);
+        getRivalHeadlines(benchmarkid);
       })
       .catch(() => {
         console.log('not ht')
       })
 }
 
-function getProductHeadlines (product_id,appealtargetid) {
+function getProductHeadlines (appealtargetid) {
   const data={
-    product_id:product_id,
     appeal_target_id:appealtargetid
   }
-  api.post(`http://159.223.87.212/api/v1/headlines/`,data,{ headers: authHeader() })
+  api.post(`http://159.223.87.212/api/v1/headlines/`,new URLSearchParams( {"appeal_target_id":appealtargetid}),{ headers: authHeader() })
       .then((response) => {
         console.log(response.data.data);
         headlines.value= response.data.data.headlines;
@@ -552,12 +551,11 @@ function getProductHeadlines (product_id,appealtargetid) {
       })
   }
 
-  function getRivalHeadlines (product_id,benchmarkid) {
+  function getRivalHeadlines (benchmarkid) {
   const data={
-    product_id:product_id,
     benchmark_id:benchmarkid
   }
-  api.post(`http://159.223.87.212/api/v1/headlines/rival`,data,{ headers: authHeader() })
+  api.post(`http://159.223.87.212/api/v1/headlines/rival`,new URLSearchParams( {"benchmark_id":benchmarkid}),{ headers: authHeader() })
       .then((response) => {
         console.log(response.data.data.headlines);
         rivalheadlines.value= response.data.data.headlines;
