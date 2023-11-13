@@ -97,7 +97,7 @@
   <div v-show="showheadlines" class="chatgptpoints m-5">
     <div class="strongpoint1points border p-3">
       <div class="flex items-start justify-between">
-        <h3 class="font-bold ">Product Headlines</h3>
+        <h6 class="font-bold ">Product Headlines</h6>
         <button type="button" @click="showModal" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-2 py-2 text-center ml-3 mb-2　inline-flex items-center">
       Revise
     <svg class="w-3 h-3 ml-2 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
@@ -111,19 +111,21 @@
 </div>
         <table class="text-sm text-left text-gray-500 dark:text-gray-400 my-2">
           <tbody>
-            <tr v-for = "(headline,i) in headlines" :key="headline.id">
-             <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap">  <span  v-if = "!toggle[headline.id]">{{ headline.headline }}</span>
-              <textarea v-else class="p-3 border w-full"  v-model="headline.headline" :placeholder="headline.headline"  ></textarea></td>
-             <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap"> {{ headline.headline.trim().length}}</td>
+            <tr v-for = "(headlinerow,i) in headlines" :key="headlinerow.id">
+             <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap"> 
+              <span  v-if="!togel[headlinerow.id]">{{ headlinerow.headline }}</span>
+              <textarea v-else class="p-3 border w-full"  v-model="headlinerow.headline" :placeholder="headlinerow.headline"  ></textarea>
+            </td>
+             <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap"> {{ headlinerow.headline.trim().length}}</td>
               <td class="px-2 py-1">
               <span class="flex">
                 <button
               type="button"
               class="mr-3"
-              :class="{ togel: togel[headline.id] }"
-              @click.prevent="toggle(headline.id)"
+              :class="{ togel: togel[headlinerow.id] }"
+              @click.prevent="toggle(headlinerow.id)"
             >
-              {{ !togel[headline.id] ? "Edit" : "Save" }}
+              {{ !togel[headlinerow.id] ? "Edit" : "Save" }}
             </button>
                 <svg @click="deleteHeadline(i)"  class="w-4 h-4 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
@@ -190,7 +192,7 @@
   <div v-show="showrivalheadlines" class="chatgptpoints p-5" >
     <div class="strongpoint1points border p-3 mb-3">
       <div class="flex items-start justify-between">
-        <h3 class="font-bold ">Rival Headlines</h3>
+        <h6 class="font-bold ">Rival Headlines</h6>
         <button type="button" @click="showModal" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-2 py-2 text-center ml-3 mb-2　inline-flex items-center">
       Revise
     <svg class="w-3 h-3 ml-2 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
@@ -206,17 +208,17 @@
       <table class="text-sm text-left text-gray-500 dark:text-gray-400 my-2"><tbody>
       <tr v-for = "(rivalheadline,i) in rivalheadlines" :key="rivalheadline.id" >
               <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap"> 
-                <span  v-if = "!togel[rivalheadline.id]">{{ rivalheadline.headline }}</span>
+                <span  v-if = "!togelrival[rivalheadline.id]">{{ rivalheadline.headline }}</span>
               <textarea v-else class="p-3 border w-100"  v-model="rivalheadline.headline" :placeholder="rivalheadline.headline"  ></textarea></td>
               <td class="px-2 py-1 font-medium text-gray-700 whitespace-nowrap"> {{ rivalheadline.headline.trim().length}}</td>
               <td class="flex px-2 py-1">
                 <button
               type="button"
               class="mr-3"
-              :class="{ togel: togel[rivalheadline.id] }"
-              @click.prevent="toggle(rivalheadline.id)"
+              :class="{ togelrival: togelrival[rivalheadline.id] }"
+              @click.prevent="togglerival(rivalheadline.id)"
             >
-              {{ !togel[rivalheadline.id] ? "edit" : "close" }}
+              {{ !togelrival[rivalheadline.id] ? "edit" : "close" }}
             </button>
                 
                 <svg @click="deleteRivalHeadline(i)"  class="w-4 h-4 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
@@ -254,13 +256,14 @@ import { api } from '../boot/axios'
 import { useRoute } from 'vue-router'
 import UserService from "../services/user.service";
 import authHeader from '../services/auth-header';
+import { useQuasar } from 'quasar'
 
 export default {
   name:'Create Headline',
   setup() {
 
     const route = useRoute();
-
+    const $q = useQuasar();
 const gender = ref("");
 
 const strong_point = ref("");
@@ -309,190 +312,22 @@ function loadData () {
       })
       .catch(() => {
         console.log('not ht')
-       /* $q.notify({
+        $q.notify({
           color: 'negative',
           position: 'top',
           message: 'Loading failed',
           icon: 'report_problem'
-        })*/
+        })
       })
   }
   loadData();
 
-const pointslistsGA = ref(
-  [{
-    id:1,
-    name:'strongpoint1',
-    points:[
-    {id:1,message:'it includes only natural ingredients'},
-    {id:2,message:'it includes  natural ingredients'},
-    {id:3,message:'headline 3'},
-    {id:4,message:'headline 4'},
-    {id:5,message:'headline 5'},
-    {id:6,message:'headline 6'},
-    {id:7,message:'headline 7'},
-    {id:8,message:'headline 8'},
-    {id:9,message:'headline 9'},
-    {id:10,message:'headline 10'},
-  ],
-  },
-  {
-    id:2,
-    name:'strongpoint2',
-    points:[
-    {id:1,message:'it includes only natural ingredients'},
-    {id:2,message:'it includes  natural ingredients'},
-    {id:3,message:'headline 3'},
-    {id:4,message:'headline 4'},
-    {id:5,message:'headline 5'},
-    {id:6,message:'headline 6'},
-    {id:7,message:'headline 7'},
-    {id:8,message:'headline 8'},
-    {id:9,message:'headline 9'},
-    {id:10,message:'headline 10'},
-  ],
-  },
-  {
-    id:3,
-    name:'strongpoint3',
-    points:[  
-   {id:1,message:'it includes only natural ingredients'},
-    {id:2,message:'it includes  natural ingredients'},
-    {id:3,message:'headline 3'},
-    {id:4,message:'headline 4'},
-    {id:5,message:'headline 5'},
-    {id:6,message:'headline 6'},
-    {id:7,message:'headline 7'},
-    {id:8,message:'headline 8'},
-    {id:9,message:'headline 9'},
-    {id:10,message:'headline 10'},
-  ],
-  },
-  ])
-
-  const pointslistsBC = ref(
-  [{
-    name:'Weakpoint 1',
-    points:[
-    {id:1,message:'Why dont you use only natural sources'},
-    {id:2,message:'headline 2'},
-    {id:3,message:'headline 3'},
-    {id:4,message:'headline 4'},
-    {id:5,message:'headline 5'},
-    {id:6,message:'headline 6'},
-    {id:7,message:'headline 7'},
-    {id:8,message:'headline 8'},
-    {id:9,message:'headline 9'},
-    {id:10,message:'headline 10'},
-  ]},
-  {
-    name:'Weakpoint 2',
-    points:[
-    {id:1,message:'Why dont you use only natural sources'},
-    {id:2,message:'headline 2'},
-    {id:3,message:'headline 3'},
-    {id:4,message:'headline 4'},
-    {id:5,message:'headline 5'},
-    {id:6,message:'headline 6'},
-    {id:7,message:'headline 7'},
-    {id:8,message:'headline 8'},
-    {id:9,message:'headline 9'},
-    {id:10,message:'headline 10'},
-  ]},
-  {
-    name:'Weakpoint 3',
-    points:[
-    {id:1,message:'Why dont you use only natural sources'},
-    {id:2,message:'headline 2'},
-    {id:3,message:'headline 3'},
-    {id:4,message:'headline 4'},
-    {id:5,message:'headline 5'},
-    {id:6,message:'headline 6'},
-    {id:7,message:'headline 7'},
-    {id:8,message:'headline 8'},
-    {id:9,message:'headline 9'},
-    {id:10,message:'headline 10'},
-  ]},
-
-  ])
-
-const headlines = ref([
-      {
-        "id": "654df921822cec8dd74e3e9d",
-        "headline": "For those who want to reduce background noise.",
-        "product_id": "65464683eb907fa316a36a59",
-        "appeal_target_id": "654df82380cb4b3e6f099363",
-        "seq": 1
-      },
-      {
-        "id": "654df922822cec8dd74e3f48",
-        "headline": "For those who want to be more productive.",
-        "product_id": "65464683eb907fa316a36a59",
-        "appeal_target_id": "654df82380cb4b3e6f099363",
-        "seq": 2
-      },
-      {
-        "id": "654df922822cec8dd74e4065",
-        "headline": "For those who want to better concentrate.",
-        "product_id": "65464683eb907fa316a36a59",
-        "appeal_target_id": "654df82380cb4b3e6f099363",
-        "seq": 3
-      },
-      {
-        "id": "654df923822cec8dd74e4121",
-        "headline": "For those who want to enjoy their music more.",
-        "product_id": "65464683eb907fa316a36a59",
-        "appeal_target_id": "654df82380cb4b3e6f099363",
-        "seq": 4
-      },
-      {
-        "id": "654df923822cec8dd74e4216",
-        "headline": "For those who want to feel more connected.",
-        "product_id": "65464683eb907fa316a36a59",
-        "appeal_target_id": "654df82380cb4b3e6f099363",
-        "seq": 5
-      },
-      {
-        "id": "654df924822cec8dd74e42d1",
-        "headline": "For those who want to make calls without distractions.",
-        "product_id": "65464683eb907fa316a36a59",
-        "appeal_target_id": "654df82380cb4b3e6f099363",
-        "seq": 6
-      },
-      {
-        "id": "654df924822cec8dd74e43bf",
-        "headline": "For those who want to hear better.",
-        "product_id": "65464683eb907fa316a36a59",
-        "appeal_target_id": "654df82380cb4b3e6f099363",
-        "seq": 7
-      },
-      {
-        "id": "654df925822cec8dd74e44af",
-        "headline": "For those who want to be more relaxed.",
-        "product_id": "65464683eb907fa316a36a59",
-        "appeal_target_id": "654df82380cb4b3e6f099363",
-        "seq": 8
-      },
-      {
-        "id": "654df925822cec8dd74e459e",
-        "headline": "For those who want to be more present.",
-        "product_id": "65464683eb907fa316a36a59",
-        "appeal_target_id": "654df82380cb4b3e6f099363",
-        "seq": 9
-      },
-      {
-        "id": "654df926822cec8dd74e467c",
-        "headline": "For those who want to improve their listening experience.",
-        "product_id": "65464683eb907fa316a36a59",
-        "appeal_target_id": "654df82380cb4b3e6f099363",
-        "seq": 10
-      }
-    ]);
-
+const headlines = ref([]);
 const rivalheadlines =ref([]);
 const showheadlines = ref(false);
 const showrivalheadlines = ref(false);
-
+const togel = ref();
+const togelrival = ref();
 const submitappeal = (i) => {
   const appealdata= {
   product_id:route.params.id,
@@ -537,14 +372,13 @@ const submitbenchmark = (i) => {
 }
 
 function getProductHeadlines (appealtargetid) {
-  const data={
-    appeal_target_id:appealtargetid
-  }
   api.post(`http://159.223.87.212/api/v1/headlines/`,new URLSearchParams( {"appeal_target_id":appealtargetid}),{ headers: authHeader() })
       .then((response) => {
         console.log(response.data.data);
         headlines.value= response.data.data.headlines;
         showheadlines.value=true;
+        togel.value = ref(headlines.value.reduce((agg, item) => ({ ...agg, [item.id]: false }), {}))
+        console.log(togel);
       })
       .catch(() => {
         console.log('not ht')
@@ -552,14 +386,12 @@ function getProductHeadlines (appealtargetid) {
   }
 
   function getRivalHeadlines (benchmarkid) {
-  const data={
-    benchmark_id:benchmarkid
-  }
   api.post(`http://159.223.87.212/api/v1/headlines/rival`,new URLSearchParams( {"benchmark_id":benchmarkid}),{ headers: authHeader() })
       .then((response) => {
         console.log(response.data.data.headlines);
         rivalheadlines.value= response.data.data.headlines;
         showrivalheadlines.value=true;
+        togelrival.value = ref(rivalheadlines.value.reduce((agg, item) => ({ ...agg, [item.id]: false }), {}))
       })
       .catch(() => {
         console.log('not ht')
@@ -595,11 +427,14 @@ const deleteRivalHeadline = (i) => {
   rivalheadlines.value.splice(rivalheadlines.value[i], 1);
 }
 
-const togel = ref(pointslistsGA.value.reduce((agg, item) => ({ ...agg, [item.id]: false }), {}))
+
 
 function toggle(id) {
-      togel.value[id] = !togel.value[id];
-    }
+     togel.value[id] = !togel.value[id];
+}
+function togglerival(id) {
+     togelrival.value[id] = !togelrival.value[id];
+}
 
 function getAppealTargets (pid) {
       api.get(`http://159.223.87.212/api/v1/products/appeal-target/?product_id=`+pid, { headers: authHeader() })
@@ -623,8 +458,8 @@ function getBenchmarks (pid) {
       })
 }  
 
-return { row,pointslistsGA, pointslistsBC, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, rownumber2,isHiddenGA,isHiddenBC,computedArr,min_age,max_age,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,
-      toggle,strong_point,submitappeal,submitbenchmark,motivation,solving_feature,gender,addgeneralappealrow,headlines,rivalheadlines,deleteRow,deleteHeadline,addbenchmarkrow,deleteRivalRow,deleteRivalHeadline};
+return { row, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, rownumber2,isHiddenGA,isHiddenBC,computedArr,min_age,max_age,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,togelrival,
+      toggle,togglerival,strong_point,submitappeal,submitbenchmark,motivation,solving_feature,gender,addgeneralappealrow,headlines,rivalheadlines,deleteRow,deleteHeadline,addbenchmarkrow,deleteRivalRow,deleteRivalHeadline};
   }
  
 }

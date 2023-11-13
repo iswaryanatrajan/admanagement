@@ -22,8 +22,9 @@
   <form>
     <textarea class="p-3 border mb-3" rows="10" cols="50" v-model="productInfo" placeholder="Enter product information"></textarea>
     <p style="white-space: pre-line;">{{ productInfo }}</p>
-    <RouterLink v-if="row!==null" :to= "{ name: 'generalappeal', params: { id: row.id}}">
-      <button type="button" @click="postProductInfo()" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">次へ</button></RouterLink>
+   <!--<RouterLink v-if="row!==null" :to= "{ name: 'generalappeal', params: { id: row.id}}">--> 
+      <button type="button" @click="postProductInfo()" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">次へ</button>
+    <!--</RouterLink>-->
     
   </form>
   </div>
@@ -33,7 +34,7 @@
 <script>
 import { ref, onMounted , computed} from "vue";
 import { api } from '../boot/axios'
-import { useRoute } from 'vue-router'
+import { useRoute,useRouter} from 'vue-router'
 import UserService from "../services/user.service";
 import authHeader from '../services/auth-header';
 
@@ -64,14 +65,17 @@ function loadData () {
       })
   }
   loadData();
+  const router = useRouter();
   function postProductInfo(){
-    if(productInfo==""){
+    if(productInfo.value==""){
         return;
     }
+    
     api.post(`http://159.223.87.212/api/v1/products/product-info`,new URLSearchParams({"product_id":row.value.id,"product_info":productInfo.value}), { headers: authHeader() })
         .then((res) => {
           //success = true
           console.log(res);
+          router.push({name: 'generalappeal', params: { id: row.id }} )
         })
         .catch((error) => {
           //error = error.data.message;

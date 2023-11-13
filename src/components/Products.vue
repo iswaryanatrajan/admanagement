@@ -60,7 +60,7 @@
 
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Cancel" v-close-popup></q-btn>
-          <q-btn flat label="Save" @click="addchildpdt(i)" v-close-popup></q-btn>
+          <q-btn flat label="Save" @click="loadData()" v-close-popup></q-btn>
         </q-card-actions>
       </div>
       </q-card>
@@ -180,7 +180,27 @@
 
   </div>
 
+  <q-dialog v-model="editprompt" persistent>
+      <q-card style="width: 900px; max-width: 80vw;">
+        <q-toolbar>
+          <q-toolbar-title>Edit Product</q-toolbar-title>
 
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+        <div class="flex items-center">
+
+       <q-card-section>
+          <div class="">Product Name</div>
+          <q-input dense v-model="editselected_row.product_name" autofocus></q-input>
+        </q-card-section>
+        <q-card-section>
+          <div class="">ASIN</div>
+          <q-input dense v-model="editselected_row.asin"></q-input>
+        </q-card-section>
+        <q-btn  color="primary" @click="editProduct()" icon="add" label="Edit Product"/>
+      </div>
+      </q-card>
+      </q-dialog>
 </div>
   </div>
 
@@ -220,7 +240,8 @@ export default {
     const child_asin=ref("");
     const childimage_src = ref("");
     const parent_id=ref("");
-
+const editselected_row = ref({});
+const editprompt=ref(false);
 
   //const data = ref(null)
 
@@ -270,7 +291,12 @@ const childcolumns = ref([
 
   const rows = ref(null);
   const onEdit = (row) => {
-      console.log(`Editing row - '${row.name}'`)
+      console.log(`Editing row - '${row.id}'`)
+      editprompt.value = true;
+      editselected_row.value = row;
+
+
+
 
     }
 
@@ -399,6 +425,29 @@ const childcolumns = ref([
    
  }
 
+ const editProduct = () => {
+  const data={
+    "product_name":editselected_row.value.product_name,
+    "asin":editselected_row.value.asin
+  }
+/*if(editselected_row.value.parent_id){
+  const data={
+    "product_name":editselected_row.value.product_name,
+    "asin":editselected_row.value.asin
+  }
+}
+else{}*/
+    axios.put("http://159.223.87.212/api/v1/products/"+editselected_row.value.id,data,{headers:authHeader()}) .then((response) => {
+        console.log(response.data);
+        loadData();
+        parent_id.value =response.data.data.id;
+        console.log(parent_id.value);
+      })
+      .catch(() => {
+        console.log('not ht');
+      })
+ }
+
  const addchildpdt = (i) => {
   console.log(childproducts.value);
   const formData = new FormData();
@@ -433,8 +482,8 @@ const childcolumns = ref([
  }
 
   return {sno,pdtimage,rows,image,imagePath,handleFileUpload,selectedImage,productImages,childproductImages,id,
-      columns,
-      onEdit,child_name,child_asin,childimage_src,parent_id,
+      columns,editprompt,editProduct,
+      onEdit,child_name,child_asin,childimage_src,parent_id,editselected_row,
       onDelete,childcolumns,addprompt,product_name,asin,image_src,filesImages,childproduct,childproducts,addProduct,addchildpdt,addanotherchild,deletechild}
   }
 }
