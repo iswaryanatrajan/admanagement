@@ -34,7 +34,7 @@
           <input type="file" @change="handleFileUpload" name="image" id="image"  accept="image/*" />
 
         </q-card-section>
-        <q-btn  color="primary" @click="addProduct()" icon="add" label="Add Product"/>
+        <q-btn  color="primary" @click="addProduct()" icon="add" label="Save"/>
       </div>
 
        <!-- Child Product -->
@@ -54,13 +54,12 @@
         </q-card-section>
         <q-card-section>
        <q-btn size="sm" color="primary" round dense @click="deletechild(i)" icon="delete" />
-        <q-btn size="sm" color="primary" round dense @click="addanotherchild(i)" icon="add" />
+        <q-btn size="sm" color="primary" round dense @click="addanotherchild(i)" icon="add" label="Save"/>
       </q-card-section>
     
 
         <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Cancel" v-close-popup></q-btn>
-          <q-btn flat label="Save" @click="loadData()" v-close-popup></q-btn>
+          <q-btn flat label="Cancel" @click="loadData()" v-close-popup></q-btn>
         </q-card-actions>
       </div>
       </q-card>
@@ -137,9 +136,9 @@
           {{ childRow.asin }}
         </q-td>
         <q-td class="q-pa-md q-gutter-sm">
-            <q-icon name="edit" size="sm" @click="onEdit(props.row)" />
-            <q-icon name="delete" size="sm" @click="onDelete(props.row)" />
-            <RouterLink :to= "{ name: 'productinfo', params: { id: props.row.id}}">
+            <q-icon name="edit" size="sm" @click="onEditChild(childRow)" />
+            <q-icon name="delete" size="sm" @click="onDeleteChild(childRow)" />
+            <RouterLink :to= "{ name: 'productinfo', params: { id: childRow._id,parentid: childRow.parent_id}}">
             <q-btn  color="primary" label="見出しの作成" ></q-btn>
             </RouterLink>
         </q-td>
@@ -197,7 +196,12 @@
           <div class="">ASIN</div>
           <q-input dense v-model="editselected_row.asin"></q-input>
         </q-card-section>
-        <q-btn  color="primary" @click="editProduct()" icon="add" label="Edit Product"/>
+       <!-- <q-card-section>
+          <div class="">Image</div>
+          <img width='50' :src="productImages[editselected_row.id]" />
+          <input type="file" @change="handleFileUpload" name="image" id="image"  accept="image/*" />
+        </q-card-section>-->
+        <q-btn  color="primary" @click="editProduct()"  label="Edit Product"/>
       </div>
       </q-card>
       </q-dialog>
@@ -294,13 +298,22 @@ const childcolumns = ref([
       console.log(`Editing row - '${row.id}'`)
       editprompt.value = true;
       editselected_row.value = row;
-
-
-
-
     }
-
-
+  const onEditChild = (row) => {
+      console.log(`Editing row - '${row._id}'`)
+      editprompt.value = true;
+      editselected_row.value = row;
+    }
+const onDeleteChild = (row) => {
+      console.log(`Deleting row - '${row._id}'`)
+      api.delete(`http://159.223.87.212/api/v1/child-products/${row._id}`,{headers:authHeader()}) .then((response) => {
+        console.log(response.data);
+        loadData();
+      })
+      .catch(() => {
+        console.log('not ht');
+      })
+    }
     
     const onDelete = (row) => {
       api.delete(`http://159.223.87.212/api/v1/products/${row.id}`,{headers:authHeader()})
@@ -312,15 +325,9 @@ const childcolumns = ref([
       })
       .catch(() => {
         console.log('not hit')
-        /*$q.notify({
-          color: 'negative',
-          position: 'top',
-          message: 'Loading failed',
-          icon: 'report_problem'
-        })*/
       })
       console.log(`Deleting row - '${row.id}'`)
-    }
+  }
 
 
 
@@ -426,18 +433,15 @@ const childcolumns = ref([
  }
 
  const editProduct = () => {
-  const data={
+  const product_id=ref(null);
+if(editselected_row.value.parent_id){
+ product_id.value = editselected_row.value.parent_id;
+   const data={
     "product_name":editselected_row.value.product_name,
-    "asin":editselected_row.value.asin
+    "asin":editselected_row.value.asin,
   }
-/*if(editselected_row.value.parent_id){
-  const data={
-    "product_name":editselected_row.value.product_name,
-    "asin":editselected_row.value.asin
-  }
-}
-else{}*/
-    axios.put("http://159.223.87.212/api/v1/products/"+editselected_row.value.id,data,{headers:authHeader()}) .then((response) => {
+  console.log(data);
+  axios.put("http://159.223.87.212/api/v1/child-products/"+editselected_row.value._id,data,{headers:authHeader()}) .then((response) => {
         console.log(response.data);
         loadData();
         parent_id.value =response.data.data.id;
@@ -446,7 +450,28 @@ else{}*/
       .catch(() => {
         console.log('not ht');
       })
+}
+else{
+  product_id.value = editselected_row.value.id;
+ const  data={
+    "product_name":editselected_row.value.product_name,
+    "asin":editselected_row.value.asin
+  }
+  console.log(data);
+
+    axios.put("http://159.223.87.212/api/v1/products/"+product_id.value,data,{headers:authHeader()}) .then((response) => {
+        console.log(response.data);
+        loadData();
+        parent_id.value =response.data.data.id;
+        console.log(parent_id.value);
+      })
+      .catch(() => {
+        console.log('not ht');
+      })
+    }
  }
+
+
 
  const addchildpdt = (i) => {
   console.log(childproducts.value);
@@ -458,7 +483,7 @@ else{}*/
       formData.append('product_info', childproducts.value[i].child_name);
       formData.append('parent_id',parent_id.value);
       console.log(formData);
-      axios.post("http://159.223.87.212/api/v1/products/child-products",formData,{headers:authHeader()}) .then((response) => {
+      axios.post("http://159.223.87.212/api/v1/child-products/child-products",formData,{headers:authHeader()}) .then((response) => {
         console.log(response.data);
         loadData();
       })
@@ -474,15 +499,15 @@ else{}*/
   childproducts.value = [...childproducts.value, {child_name: '', child_asin: '',childimage_src:''}]
  }
 
-  const deletechild = (i) => {
+  const deletechild = (row) => {
     childproducts.value.splice(childproducts.value[i], 1);
-   /* axios.delete("http://159.223.87.212/api/v1/products/"+product_id,{headers:authHeader()}) .then((response) => {
+   /*api.delete(`http://159.223.87.212/api/v1/child-products/${row._id}`,{headers:authHeader()}) .then((response) => {
         console.log(response.data);
       })*/
  }
 
   return {sno,pdtimage,rows,image,imagePath,handleFileUpload,selectedImage,productImages,childproductImages,id,
-      columns,editprompt,editProduct,
+      columns,editprompt,editProduct,onEditChild,onDeleteChild,
       onEdit,child_name,child_asin,childimage_src,parent_id,editselected_row,
       onDelete,childcolumns,addprompt,product_name,asin,image_src,filesImages,childproduct,childproducts,addProduct,addchildpdt,addanotherchild,deletechild}
   }

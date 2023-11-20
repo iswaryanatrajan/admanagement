@@ -143,7 +143,7 @@ library.add(faGear,faHome);
           type: Array,
           default: () => [
             {
-              link: '/',
+              link: '/accounts',
               name: 'Home',
               tooltip: 'Home',
               icon: 'home',

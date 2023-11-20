@@ -70,7 +70,6 @@ function loadData () {
     if(productInfo.value==""){
         return;
     }
-    
     api.post(`http://159.223.87.212/api/v1/products/product-info`,new URLSearchParams({"product_id":row.value.id,"product_info":productInfo.value}), { headers: authHeader() })
         .then((res) => {
           //success = true

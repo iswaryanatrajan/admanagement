@@ -14,6 +14,7 @@
   <script setup>
   import MainHeader from "./Mainheader.vue";
   import Side from "./Side.vue";
+  import UserService from "../services/user.service";
     </script>
   <script>
   import UserService from "../services/user.service";
@@ -21,23 +22,10 @@
     name: "Home",
     data() {
       return {
-        content: "Welcome to app. Please login to continue",
+        content: "Welcome to Copy Writer. Please login to continue",
       };
     },
     mounted() {
-     /* UserService.getPublicContent().then(
-        (response) => {
-          this.content = response.data;
-        },
-        (error) => {
-          this.content =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-        }
-      );*/
-    },
+    }
   };
   </script>

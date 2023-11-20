@@ -8,7 +8,7 @@
           </svg>
         Back</button>
       </div>
-     
+      <v-select label="optimizationstrategy"  :options="['Canada', 'United States']"  ></v-select>
       <div class="relative overflow-x-auto mt-10">
 
 
@@ -22,6 +22,7 @@
       <tr>
         <th class="px-6 py-3">ブランド・クライアント名</th>
         <th class="px-6 py-3">リクエスト者</th>
+        <th class="px-6 py-3">キャンペーン作成番号</th>
         <th class="px-6 py-3">キャンペーンID</th>
         <th class="px-6 py-3">依頼日</th>
         <th class="px-6 py-3">広告タイプ</th>
@@ -32,7 +33,8 @@
         <th class="px-6 py-3">グループID</th>
         <th class="px-6 py-3">目的</th>
         <th class="px-6 py-3">課金タイプ</th>
-        <th class="px-6 py-3">広告するSKU番号</th>
+        <th class="px-6 py-3">広告するシリアル番号</th>
+        <th class="px-6 py-3">代表ASIN</th>
         <th class="px-6 py-3">広告ASIN</th>
         <th class="px-6 py-3">見出し文章</th>
         <th class="px-6 py-3">カテゴリー①</th>
@@ -53,10 +55,9 @@
       <tr class="border" v-for="(row, index) in rows" :key="index">
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{row.accountname}} </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="requester" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.campaignnumber" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap" >{{row.purpose}}{{ row.advskunumber }}</td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-            <input type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date">
-        </td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{ row.entryDate }}</td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div class="mb-3">
             <select id="adtype"  class="w-auto  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -67,27 +68,17 @@
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div class="mb-3">
-            <select id="optimizationstrategy"   class="w-auto  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option>Conversion</option>
-              <option>Page View</option>
-              <option>Reach</option>
-            </select>
+            <v-select label="optimizationstrategy" taggable pushTags :options="['Conversion','Page view','Reach','Drive Page visits','Grow brand impression share']" v-model="row.optimizationstrategy" ></v-select>
           </div>
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div class="mb-3">
-            <select id="adformat" class="w-auto  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option>画像</option>
-              <option>動画</option>
-            </select>
+            <v-select label="adformat" taggable pushTags :options="['Text only','Movie','Image']" v-model="row.adformat" ></v-select>
           </div>
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
             <div class="mb-3">
-            <select id="targeting" class="w-auto  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option>Context</option>
-              <option>Audience</option>
-            </select>
+              <v-select label="targeting" taggable pushTags :options="['Context','Audience']" v-model="row.targeting" ></v-select>
           </div>
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="number" class="p-3 border w-full" v-model="dailybudget" /></td>
@@ -96,22 +87,25 @@
               <option value="2">見出し：2</option>
               <option value="3">両方：3</option>
             </select></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"> <select id="purpose" v-model="row.purpose" class="w-auto  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option value="AB">AB：A/B test</option>
-              <option value="BR">BR:Brand Awareness</option>
-              <option value="CA">CA:キャンペーン</option>
-              <option value="EV">EV：季節イベント</option>
-            </select></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"> <select id="billingtype" class="w-auto  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option value="CPC">CPC</option>
-              <option value="VCPM">VCPM</option>
-            </select></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.advskunumber" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.advasin" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
+          <v-select  taggable pushTags :options="[
+            {label: 'AB:A/B test', value: 'AB'},
+            {label: 'BR:Brand Awareness', value: 'BR'},
+            {label: 'CA:キャンペーン', value: 'CA'},
+            {label: 'EV:季節イベント', value: 'EV'}
+            ]" v-model="row.purpose" ></v-select>
+         </td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"> 
+          <v-select label="billingtype" taggable pushTags :options="['CPC','VCPM']" v-model="row.billingtype" ></v-select></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"  >{{ row.advskunumber}}</td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{ row.repasin}}</td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{ row.advasin}}</td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{row.headline}}</td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category1" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category2" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category3" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category4" /></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category5" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.lookback1" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.lookback2" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.narrowdown" /></td>
@@ -144,26 +138,27 @@ import { ref, onMounted , computed} from "vue";
 
 export default {
 setup() {
+  const entryDate = ref(new Date().toLocaleDateString());
 
 const rows = ref([
-  { accountname:'Account 1', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: ''},
-  { accountname:'Account 1', headline:'headline 2',campaignID:'',advskunumber: ''},
-  { accountname:'Account 1', headline:'headline 3',campaignID:'', advskunumber: ''},
-  { accountname:'Account 1', headline:'Weakpoint headline 1',campaignID:'', advskunumber: ''},
-  { accountname:'Account 1', headline:'headline 2',campaignID:'',advskunumber: ''},
-  { accountname:'Account 1', headline:'headline 3',campaignID:'', advskunumber: ''},
-  { accountname:'Account 2', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: ''},
-  { accountname:'Account 2', headline:'headline 2',campaignID:'',advskunumber: ''},
-  { accountname:'Account 2', headline:'headline 3',campaignID:'', advskunumber: ''},
-  { accountname:'Account 2', headline:'Weakpoint headline 2',campaignID:'', advskunumber: ''},
-  { accountname:'Account 2', headline:'headline 2',campaignID:'',advskunumber: ''},
-  { accountname:'Account 2', headline:'headline 3',campaignID:'', advskunumber: ''},
-  { accountname:'Account 3', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: ''},
-  { accountname:'Account 3', headline:'headline 2',campaignID:'',advskunumber: ''},
-  { accountname:'Account 3', headline:'headline 3',campaignID:'', advskunumber: ''},
-  { accountname:'Account 3', headline:'Weakpoint headline 3',campaignID:'', advskunumber: ''},
-  { accountname:'Account 3', headline:'headline 2',campaignID:'',advskunumber: ''},
-  { accountname:'Account 3', headline:'headline 3',campaignID:'', advskunumber: ''},
+  { accountname:'Account 1', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 1', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 1', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 1', headline:'Weakpoint headline 1',campaignID:'', advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 1', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 1', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 2', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 2', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 2', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 2', headline:'Weakpoint headline 2',campaignID:'', advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 2', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 2', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 3', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 3', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 3', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 3', headline:'Weakpoint headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 3', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
+  { accountname:'Account 3', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
 ]);
 
 
@@ -174,7 +169,7 @@ const getValues = () => {
     };
 
 return {
-  rows,getValues
+  rows,getValues,entryDate
 
 };
  

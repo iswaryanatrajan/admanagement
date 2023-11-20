@@ -36,9 +36,10 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="border" v-for="(generalappealform,i) in generalappealforms" v-bind:key="generalappealform.strong_point">
-        <td class="px-4 py-2 font-medium text-gray-700 whitespace-nowrap">
-          <textarea class="p-3 border  border-gray-300 w-100 rounded-lg" rows="14" cols="20"  v-model="generalappealform.strong_point" placeholder="Enter a strong point"></textarea></td>
+      <tr class="border" v-for="(generalappealform,i) in generalappealforms" v-bind:key="generalappealform.id">
+        <td class="px-4 py-2 font-medium text-gray-700">
+          <textarea class="p-3 border  border-gray-300 rounded-lg" rows="14" cols="20"  v-model="generalappealform.strong_point" placeholder="Enter a strong point"></textarea>
+        </td>
         <td class="w-1/px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <div class="mb-3 flex items-center">
             <label for="age" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100">Age:</label>
@@ -59,10 +60,10 @@
           <div class="mb-3">
             <label for="gender" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100">Gender:</label>
             <select id="gender" v-model="generalappealform.gender"  class="w-max  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option>Select Gender</option>
-              <option>Male （男性）</option>
-              <option>Female （女性）</option>
-              <option>Both（男性と女性両方）</option>
+              <option value="Select">Select Gender</option>
+              <option value="男性">Male （男性）</option>
+              <option value="女性">Female （女性）</option>
+              <option value="男性と女性両方">Both（男性と女性両方）</option>
             </select>
           </div>
           <div class="mb-3">
@@ -76,12 +77,26 @@
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap flex flex-start w-max items-center">
          <!--- <button type="button" @click="isHiddenGA = false" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>-->
-        <button type="button" @click="submitappeal(i)" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
+        <button type="button"  @click="confirmappeal(i)" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
   
             <svg @click="deleteRow(i)"  class="w-6 h-6 text-grey-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
                 </svg>  
-         
+                <q-dialog v-model="confirmappealmodal" persistent>
+                  <q-card style="width: 900px; max-width: 80vw;">
+                    <q-toolbar>
+                      <q-toolbar-title>Confirm Appeal Target</q-toolbar-title>
+                      <q-btn flat round dense icon="close" v-close-popup />
+                    </q-toolbar>
+                    <q-card-section>
+                      <textarea class="p-3 border w-full"  rows="3" v-model="confirmappealtext" ></textarea>
+                    </q-card-section>
+                  <q-card-section>
+                  <q-btn  color="primary" @click="submitappeal(i)" icon="add" label="Save" v-close-popup/>
+                  </q-card-section>
+                  </q-card>
+                </q-dialog>
+
         </td>
       
       </tr>
@@ -123,7 +138,7 @@
               type="button"
               class="mr-3"
               :class="{ togel: togel[headlinerow.id] }"
-              @click.prevent="toggle(headlinerow.id)"
+              @click.prevent="toggle(headlinerow.id),editHeadline(i)"
             >
               {{ !togel[headlinerow.id] ? "Edit" : "Save" }}
             </button>
@@ -154,7 +169,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="border"   v-for="(benchmarkform,i) in benchmarkforms" v-bind:key="benchmarkform.weak_point">
+      <tr class="border"   v-for="(benchmarkform,i) in benchmarkforms" v-bind:key="benchmarkform.id">
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
           <label for="rivalpdtinfo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">誰をターゲットにしますか？</label>
           <textarea class="p-3 border border-gray-300 rounded-lg w-100"  style="height:100%;width:100%;display:block" v-model="benchmarkform.rival_product_info" placeholder="Rival product information"></textarea></td>
@@ -171,11 +186,24 @@
           </div>
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap flex flex-start">
-          <button type="button" @click="submitbenchmark(i)" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
+          <button type="button" @click="confirmbenchmark(i)" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
             <svg @click="deleteRivalRow(i)"  class="w-6 h-6 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
                 </svg>  
-         
+                <q-dialog v-model="confirmbenchmarkmodal" persistent>
+                  <q-card style="width: 900px; max-width: 80vw;">
+                    <q-toolbar>
+                      <q-toolbar-title>Confirm Benchamrk</q-toolbar-title>
+                      <q-btn flat round dense icon="close" v-close-popup />
+                    </q-toolbar>
+                    <q-card-section>
+                      <textarea class="p-3 border w-full"  rows="3" v-model="confirmbenchmarktext" ></textarea>
+                    </q-card-section>
+                  <q-card-section>
+                  <q-btn  color="primary" @click="submitbenchmark(i)" icon="add" label="Save" v-close-popup/>
+                  </q-card-section>
+                  </q-card>
+                </q-dialog>
         </td>
       </tr>
 
@@ -216,7 +244,7 @@
               type="button"
               class="mr-3"
               :class="{ togelrival: togelrival[rivalheadline.id] }"
-              @click.prevent="togglerival(rivalheadline.id)"
+              @click.prevent="togglerival(rivalheadline.id),editRivalHeadline(i)"
             >
               {{ !togelrival[rivalheadline.id] ? "edit" : "close" }}
             </button>
@@ -237,8 +265,8 @@
 </tab>
 </tabs>
 </div>
-<RouterLink v-show="!isHiddenBC" :to= "{ name: 'adsettings'}">
-  <button type="button"  class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Next</button></RouterLink>
+<RouterLink  :to= "{ name: 'adsettings'}">
+  <button type="button"  class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Submit</button></RouterLink>
   </div>
 
   <div>
@@ -265,6 +293,10 @@ export default {
     const route = useRoute();
     const $q = useQuasar();
 const gender = ref("");
+const confirmappealmodal = ref(false);
+const confirmappealtext =ref("");
+const confirmbenchmarkmodal =ref(false);
+const confirmbenchmarktext =ref("");
 
 const strong_point = ref("");
 const motivation = ref("");
@@ -350,6 +382,15 @@ const submitappeal = (i) => {
         console.log('not ht')
       })
 }
+const confirmappeal = (i) => {
+  confirmappealtext.value = "この商品は" + generalappealforms.value[i].strong_point+"という特徴があります。\nその人たちは"+ generalappealforms.value[i].min_age + "~" + generalappealforms.value[i].max_age + "才くらいの" + generalappealforms.value[i].gender + "で" + generalappealforms.value[i].motivation + "\nこの商品は" + generalappealforms.value[i].solving_feature + "といったことを説明したキャッチコピーを10とおり作成したいです。"
+  confirmappealmodal.value = true;
+}
+
+const confirmbenchmark = (i) => {
+  confirmbenchmarktext.value = benchmarkforms.value[i].rival_product_info+"をターゲットにしています。\nその人たちは"+ benchmarkforms.value[i].weak_point + "といった傾向があります。この商品は" + benchmarkforms.value[i].improvement + "といったことを説明したキャッチコピーを10とおり作成したいです。" 
+  confirmbenchmarkmodal.value = true;
+}
 
 const submitbenchmark = (i) => {
   const appealdata= {
@@ -423,11 +464,29 @@ const deleteHeadline = (i) => {
   headlines.value.splice(headlines.value[i], 1);
 }
 
+
 const deleteRivalHeadline = (i) => {
   rivalheadlines.value.splice(rivalheadlines.value[i], 1);
 }
 
-
+const editRivalHeadline = (i) => {
+  api.put(`http://159.223.87.212/api/v1/headlines`,new URLSearchParams({"headline_id":rivalheadlines.value[i].id,"headline":rivalheadlines.value[i].headline}), { headers: authHeader() })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+}
+const editHeadline = (i) => {
+  api.put(`http://159.223.87.212/api/v1/headlines`,new URLSearchParams({"headline_id":headlines.value[i].id,"headline":headlines.value[i].headline}), { headers: authHeader() })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+}
 
 function toggle(id) {
      togel.value[id] = !togel.value[id];
@@ -435,6 +494,8 @@ function toggle(id) {
 function togglerival(id) {
      togelrival.value[id] = !togelrival.value[id];
 }
+
+
 
 function getAppealTargets (pid) {
       api.get(`http://159.223.87.212/api/v1/products/appeal-target/?product_id=`+pid, { headers: authHeader() })
@@ -459,7 +520,7 @@ function getBenchmarks (pid) {
 }  
 
 return { row, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, rownumber2,isHiddenGA,isHiddenBC,computedArr,min_age,max_age,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,togelrival,
-      toggle,togglerival,strong_point,submitappeal,submitbenchmark,motivation,solving_feature,gender,addgeneralappealrow,headlines,rivalheadlines,deleteRow,deleteHeadline,addbenchmarkrow,deleteRivalRow,deleteRivalHeadline};
+      toggle,togglerival,strong_point,confirmappealmodal,confirmappeal,confirmappealtext,confirmbenchmarkmodal,confirmbenchmark,confirmbenchmarktext,submitappeal,submitbenchmark,motivation,solving_feature,gender,addgeneralappealrow,headlines,rivalheadlines,deleteRow,deleteHeadline,addbenchmarkrow,deleteRivalRow,deleteRivalHeadline,editHeadline,editRivalHeadline};
   }
  
 }
