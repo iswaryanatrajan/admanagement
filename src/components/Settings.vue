@@ -8,7 +8,6 @@
           </svg>
         Back</button>
       </div>
-      <v-select label="optimizationstrategy"  :options="['Canada', 'United States']"  ></v-select>
       <div class="relative overflow-x-auto mt-10">
 
 
@@ -98,14 +97,12 @@
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"> 
           <v-select label="billingtype" taggable pushTags :options="['CPC','VCPM']" v-model="row.billingtype" ></v-select></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"  >{{ row.advskunumber}}</td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{ row.repasin}}</td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{ row.advasin}}</td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><textarea class="p-3 border w-full" v-model="row.repasin"></textarea></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><textarea class="p-3 border w-full" v-model="row.advasin"></textarea></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{row.headline}}</td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category1" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category2" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category3" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category4" /></td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.category5" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.lookback1" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.lookback2" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><input type="text" class="p-3 border w-full" v-model="row.narrowdown" /></td>
@@ -135,41 +132,73 @@
 
 <script >
 import { ref, onMounted , computed} from "vue";
+import { api } from '../boot/axios';
+import { useRoute } from 'vue-router'
+import authHeader from '../services/auth-header';
 
 export default {
 setup() {
   const entryDate = ref(new Date().toLocaleDateString());
-
-const rows = ref([
-  { accountname:'Account 1', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 1', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 1', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 1', headline:'Weakpoint headline 1',campaignID:'', advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 1', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 1', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 2', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 2', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 2', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 2', headline:'Weakpoint headline 2',campaignID:'', advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 2', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 2', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 3', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 3', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 3', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 3', headline:'Weakpoint headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 3', headline:'headline 2',campaignID:'',advskunumber: '',entryDate:entryDate},
-  { accountname:'Account 3', headline:'headline 3',campaignID:'', advskunumber: '',entryDate:entryDate},
-]);
-
-
 
 const getValues = () => {
       const values = rows.value;
       console.log(values);
     };
 
+const product=ref(null);
+const headlines=ref(null);
+const route = useRoute();
+
+function loadData () {
+  api.get(`http://159.223.87.212/api/v1/products/${route.params.id}`, { headers: authHeader() })
+      .then((response) => {
+        product.value = response.data.data;
+        console.log(product.value);
+        rows.value = [{ accountname:'Account 1', headline:'『ブルーライトの心配ゼロ。目に優しい映し出し。』',campaignID:'', advskunumber: '',repasin:product.value.asin,advasin:product.value.asin,entryDate:entryDate},
+  { accountname:'Account 1', headline:'headline 2',campaignID:'',advskunumber: '',repasin:product.value.asin,advasin:product.value.asin,entryDate:entryDate},
+  { accountname:'Account 1', headline:'headline 3',campaignID:'', advskunumber: '',repasin:product.value.asin,advasin:product.value.asin,entryDate:entryDate},
+  { accountname:'Account 1', headline:'Weakpoint headline 1',campaignID:'', advskunumber: '',repasin:product.value.asin,advasin:product.value.asin,entryDate:entryDate},
+  { accountname:'Account 1', headline:'headline 2',campaignID:'',advskunumber: '',repasin:product.value.asin,advasin:product.value.asin,entryDate:entryDate},
+  { accountname:'Account 1', headline:'headline 3',campaignID:'', advskunumber: '',repasin:product.value.asin,advasin:product.value.asin,entryDate:entryDate},
+];
+        getHeadlines(product.value.id);
+        getRivalHeadlines(product.value.id);
+      })
+      .catch(() => {
+        console.log('not ht')
+       /* $q.notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Loading failed',
+          icon: 'report_problem'
+        })*/
+      })
+}
+loadData();
+
+const rows =ref(null);
+
+const getHeadlines = (product_id) => {
+  console.log(product_id);
+  api.get(`http://159.223.87.212/api/v1/headlines/`,new URLSearchParams( {"product_id":product_id}), { headers: authHeader() })
+      .then((response) => {
+        headlines.value = response.data.data;
+        console.log(headlines.value);
+
+      })
+      .catch(() => {
+        console.log('not ht')
+       /* $q.notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Loading failed',
+          icon: 'report_problem'
+        })*/
+      })
+};
+
 return {
-  rows,getValues,entryDate
+  rows,getValues,entryDate,getHeadlines,product,headlines
 
 };
  

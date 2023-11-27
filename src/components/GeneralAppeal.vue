@@ -15,7 +15,7 @@
       <tr class="border-b" v-if="row!==null">
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
          {{row.product_name}}</td>
-        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><img width="50" :src="row.image_url"></td>
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap"><img  width='50' :src="productImages[row.id]" /></td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{row.asin}}</td>
       </tr>
     </tbody>
@@ -77,8 +77,8 @@
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap flex flex-start w-max items-center">
          <!--- <button type="button" @click="isHiddenGA = false" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>-->
-        <button type="button"  @click="confirmappeal(i)" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
-  
+         <button type="button"  @click="confirmappeal(i)" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
+
             <svg @click="deleteRow(i)"  class="w-6 h-6 text-grey-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
                 </svg>  
@@ -284,7 +284,8 @@ import { api } from '../boot/axios'
 import { useRoute } from 'vue-router'
 import UserService from "../services/user.service";
 import authHeader from '../services/auth-header';
-import { useQuasar } from 'quasar'
+import { useQuasar } from 'quasar';
+import axios from 'axios';
 
 export default {
   name:'Create Headline',
@@ -292,6 +293,7 @@ export default {
 
     const route = useRoute();
     const $q = useQuasar();
+    const productImages = ref({});
 const gender = ref("");
 const confirmappealmodal = ref(false);
 const confirmappealtext =ref("");
@@ -339,6 +341,9 @@ function loadData () {
       .then((response) => {
         row.value = response.data.data;
         console.log(row.value);
+        if (row.value.image_id != "") {
+          fetchImage(row.value.id, row.value.image_id);
+        }
         getAppealTargets(row.value.id);
         getBenchmarks(row.value.id);
       })
@@ -353,6 +358,21 @@ function loadData () {
       })
   }
   loadData();
+
+  const fetchImage = async (productId, imageId) => {
+      try {
+        const response = await axios.get(`http://159.223.87.212/api/v1/products/images/${imageId}`, {
+          responseType: 'arraybuffer',
+        });
+
+        const image = `data:image/jpeg;base64,${btoa(new Uint8Array(response.data).reduce((data, byte) => data + String.fromCharCode(byte), ''))}`;
+        
+        productImages.value[productId] = image;
+        //console.log(productImages.value[productId]);
+      } catch (error) {
+        console.error(`Failed to fetch image for product ID ${productId}:`, error);
+      }
+    };
 
 const headlines = ref([]);
 const rivalheadlines =ref([]);
@@ -381,11 +401,26 @@ const submitappeal = (i) => {
       .catch(() => {
         console.log('not ht')
       })
+     /* 
+    const appealdata= confirmappealtext.value;
+    api.post(`http://159.223.87.212/api/v1/products/appeal-target/`,appealdata, { headers: authHeader() })
+      .then((response) => {
+        console.log(response.data.data);
+        const product_id = response.data.data.product_id;
+        const appealtargetid = response.data.data.id;
+        getProductHeadlines(appealtargetid);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+     */
 }
 const confirmappeal = (i) => {
   confirmappealtext.value = "この商品は" + generalappealforms.value[i].strong_point+"という特徴があります。\nその人たちは"+ generalappealforms.value[i].min_age + "~" + generalappealforms.value[i].max_age + "才くらいの" + generalappealforms.value[i].gender + "で" + generalappealforms.value[i].motivation + "\nこの商品は" + generalappealforms.value[i].solving_feature + "といったことを説明したキャッチコピーを10とおり作成したいです。"
   confirmappealmodal.value = true;
 }
+
+
 
 const confirmbenchmark = (i) => {
   confirmbenchmarktext.value = benchmarkforms.value[i].rival_product_info+"をターゲットにしています。\nその人たちは"+ benchmarkforms.value[i].weak_point + "といった傾向があります。この商品は" + benchmarkforms.value[i].improvement + "といったことを説明したキャッチコピーを10とおり作成したいです。" 
@@ -410,6 +445,19 @@ const submitbenchmark = (i) => {
       .catch(() => {
         console.log('not ht')
       })
+   /* 
+    const appealdata= confirmbenchmarktext.value;
+    api.post(`http://159.223.87.212/api/v1/benchmark`,appealdata, { headers: authHeader() })
+      .then((response) => {
+        console.log(response.data.data);
+        const product_id = response.data.data.product_id;
+       const benchmarkid = response.data.data.id;
+        getRivalHeadlines(benchmarkid);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+     */
 }
 
 function getProductHeadlines (appealtargetid) {
@@ -519,7 +567,7 @@ function getBenchmarks (pid) {
       })
 }  
 
-return { row, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, rownumber2,isHiddenGA,isHiddenBC,computedArr,min_age,max_age,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,togelrival,
+return { row, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, rownumber2,isHiddenGA,isHiddenBC,computedArr,min_age,max_age,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,togelrival,productImages,
       toggle,togglerival,strong_point,confirmappealmodal,confirmappeal,confirmappealtext,confirmbenchmarkmodal,confirmbenchmark,confirmbenchmarktext,submitappeal,submitbenchmark,motivation,solving_feature,gender,addgeneralappealrow,headlines,rivalheadlines,deleteRow,deleteHeadline,addbenchmarkrow,deleteRivalRow,deleteRivalHeadline,editHeadline,editRivalHeadline};
   }
  

@@ -69,6 +69,7 @@
     },
     computed: {
     currentUser() {
+      console.log("Current user" + this.$store.state.auth.user);
       return this.$store.state.auth.user;
     },
   }

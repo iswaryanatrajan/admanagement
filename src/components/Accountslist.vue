@@ -6,13 +6,11 @@
     <tr>
       <th class="px-6 py-3">Accounts</th>
       <th class="px-6 py-3"></th>
-      <th class="px-6 py-3"></th>
     </tr>
   </thead>
   <tbody v-if="accounts !== null" >
     <tr class="border-b" v-for="account in accounts" :key="account.id">
       <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{account.email}}</td>
-      <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">{{account.id}}</td>
       <td class="px-6 py-4 font-medium whitespace-nowrap">
         <button type="button" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1 text-center mr-2 mb-2">Edit</button>
         <RouterLink :to= "{ name: 'products', params: { id: account.id }}">

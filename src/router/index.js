@@ -42,7 +42,7 @@ const router = createRouter({
       component: () => import('../views/Products.vue'),
     },
     {
-      path: '/productinfo/:id',
+      path: '/productinfo/:id/:parentid',
       name: 'productinfo',
       component: () => import('../views/ProductInfo.vue'),
       params: true
@@ -54,7 +54,7 @@ const router = createRouter({
       params: true
     },
     {
-      path: '/adsettings',
+      path: '/adsettings/:id',
       name: 'adsettings',
       component: () => import('../views/Settings.vue')
     },

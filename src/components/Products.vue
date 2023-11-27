@@ -108,7 +108,7 @@
           <q-td class="q-pa-md q-gutter-sm">
           <q-icon name="edit" size="sm" @click="onEdit(props.row)" />
           <q-icon name="delete" size="sm" @click="onDelete(props.row)" />
-          <RouterLink :to= "{ name: 'productinfo', params: { id: props.row.id}}">
+          <RouterLink :to= "{ name: 'productinfo', params: { id: props.row.id, parentid: 0}}">
           <q-btn  color="primary" label="見出しの作成" ></q-btn>
           </RouterLink>
         </q-td>
@@ -138,7 +138,7 @@
         <q-td class="q-pa-md q-gutter-sm">
             <q-icon name="edit" size="sm" @click="onEditChild(childRow)" />
             <q-icon name="delete" size="sm" @click="onDeleteChild(childRow)" />
-            <RouterLink :to= "{ name: 'productinfo', params: { id: childRow._id,parentid: childRow.parent_id}}">
+            <RouterLink :to= "{ name: 'productinfo', params: { id: childRow._id, parentid: childRow.parent_id}}">
             <q-btn  color="primary" label="見出しの作成" ></q-btn>
             </RouterLink>
         </q-td>
@@ -196,12 +196,12 @@
           <div class="">ASIN</div>
           <q-input dense v-model="editselected_row.asin"></q-input>
         </q-card-section>
-       <!-- <q-card-section>
+        <q-card-section>
           <div class="">Image</div>
           <img width='50' :src="productImages[editselected_row.id]" />
           <input type="file" @change="handleFileUpload" name="image" id="image"  accept="image/*" />
-        </q-card-section>-->
-        <q-btn  color="primary" @click="editProduct()"  label="Edit Product"/>
+        </q-card-section>
+        <q-btn  color="primary" @click="editProduct()" v-close-popup label="Edit Product"/>
       </div>
       </q-card>
       </q-dialog>
@@ -433,14 +433,16 @@ const onDeleteChild = (row) => {
  }
 
  const editProduct = () => {
+  const formData = new FormData();
+
   const product_id=ref(null);
 if(editselected_row.value.parent_id){
  product_id.value = editselected_row.value.parent_id;
-   const data={
-    "product_name":editselected_row.value.product_name,
-    "asin":editselected_row.value.asin,
-  }
-  console.log(data);
+ const data = {
+  'product_name':editselected_row.value.product_name,
+  'asin': editselected_row.value.asin
+ }
+  console.log(formData);
   axios.put("http://159.223.87.212/api/v1/child-products/"+editselected_row.value._id,data,{headers:authHeader()}) .then((response) => {
         console.log(response.data);
         loadData();
@@ -453,12 +455,13 @@ if(editselected_row.value.parent_id){
 }
 else{
   product_id.value = editselected_row.value.id;
- const  data={
-    "product_name":editselected_row.value.product_name,
-    "asin":editselected_row.value.asin
-  }
-  console.log(data);
-
+  const data = {
+  'product_name':editselected_row.value.product_name,
+  'asin': editselected_row.value.asin
+ }
+  /*formData.append('image', selectedImage.value);
+      formData.append('product_name', editselected_row.value.product_name);
+      formData.append('asin', editselected_row.value.asin);*/
     axios.put("http://159.223.87.212/api/v1/products/"+product_id.value,data,{headers:authHeader()}) .then((response) => {
         console.log(response.data);
         loadData();
