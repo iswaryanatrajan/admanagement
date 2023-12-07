@@ -276,7 +276,7 @@
           <q-toolbar-title></q-toolbar-title>
           <q-btn flat round dense icon="close" v-close-popup />
         </q-toolbar>
-        <div class="q-pa-md">
+        <div class="q-pa-md my-5">
     <div class="q-gutter-y-md">
       <q-card>
       <q-tabs
@@ -302,23 +302,23 @@
       class="q-gutter-md"
       
     >
-    <q-input outlined v-model="product_title" label="Product Title"   :rules="[ val => val && val.length > 0 || 'Please enter title']"/>
+    <q-input  v-model="product_title" label="Product Title"   :rules="[ val => val && val.length > 0 || 'Please enter title']"/>
     <q-input
       v-model="bullets"
       label="5過剰(bullets)"
-      outlined
+      
       autogrow
     />
     <q-input
       v-model="prod_contents"
       label="商品紹介コンテンツ(A+)"
-      outlined
+      
       autogrow
     />
     <q-input
       v-model="reviews"
       label="レビュー（悪い） (reviews)"
-      outlined
+      
       autogrow
     />
     <div>

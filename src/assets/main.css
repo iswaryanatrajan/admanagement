@@ -154,3 +154,6 @@ align-items: center;
 }
 
 .bg-grey{background:#f3f4f6}
+.q-tabs__content--align-justify .q-tab {
+  flex: none !important;
+}

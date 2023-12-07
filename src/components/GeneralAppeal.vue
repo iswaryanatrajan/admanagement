@@ -124,16 +124,30 @@
     <div class="strongpoint1points border p-3">
       <div class="flex items-start justify-between">
         <h6 class="font-bold ">Product Headlines</h6>
-        <button type="button" @click="showModal" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-2 py-2 text-center ml-3 mb-2　inline-flex items-center">
+        <button type="button" @click="openmodal = true" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-2 py-2 text-center ml-3 mb-2　inline-flex items-center">
       Revise
     <svg class="w-3 h-3 ml-2 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 14 3-3m-3 3 3 3m-3-3h16v-3m2-7-3 3m3-3-3-3m3 3H3v3"/>
     </svg>   
 </button>
-<a-modal v-model:open="open" :confirm-loading="confirmLoading" @ok="handleOk()">
-      <p>How do you want to revise? {{ headlines[1]}} </p>
-      <textarea class="p-3 border w-100"  style="height:100%;width:100%;display:block" v-model="revisetext[index]" ></textarea>
-    </a-modal>
+<q-dialog v-model="openmodal" persistent>
+      <q-card style="width: 700px; max-width: 80vw;" >
+        <q-toolbar>
+          <q-toolbar-title>Revise Headlines</q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+    <div class="q-gutter-y-md">
+  <q-form ref="rivalinfo" @submit="handlerevise( headlines[1])" class="q-gutter-md">
+    <q-card-section>
+        <p>How do you want to revise? </p>
+      <textarea class="p-3 border w-full"  style="height:100%;width:100%;display:block" v-model="revisetext" ></textarea> 
+      <q-btn label="Revise" type="submit" class="my-3" color="primary"/>
+    </q-card-section>
+  </q-form>
+    </div>
+    </q-card>
+</q-dialog>
+
 </div>
         <table class="text-sm text-left text-gray-500 dark:text-gray-400 my-2">
           <tbody>
@@ -232,16 +246,33 @@
     <div class="strongpoint1points border p-3 mb-3">
       <div class="flex items-start justify-between">
         <h6 class="font-bold ">Rival Headlines</h6>
-        <button type="button" @click="showModal" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-2 py-2 text-center ml-3 mb-2　inline-flex items-center">
+        <button type="button" @click="openrivalrevise = true" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-2 py-2 text-center ml-3 mb-2　inline-flex items-center">
       Revise
     <svg class="w-3 h-3 ml-2 text-white-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 14 3-3m-3 3 3 3m-3-3h16v-3m2-7-3 3m3-3-3-3m3 3H3v3"/>
     </svg>   
 </button>
-<a-modal v-model:open="open"   :confirm-loading="confirmLoading" @ok="handleOk">
+<q-dialog v-model="openrivalrevise" persistent>
+      <q-card style="width: 700px; max-width: 80vw;" >
+        <q-toolbar>
+          <q-toolbar-title>Revise Headlines</q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+    <div class="q-gutter-y-md">
+  <q-form ref="rivalinfo" @submit="handlerivalrevise( rivalheadlines[1])" class="q-gutter-md">
+    <q-card-section>
+        <p>How do you want to revise? </p>
+      <textarea class="p-3 border w-full"  style="height:100%;width:100%;display:block" v-model="reviserivaltext" ></textarea> 
+      <q-btn label="Revise" type="submit" class="my-3" color="primary"/>
+    </q-card-section>
+  </q-form>
+    </div>
+    </q-card>
+</q-dialog>
+<!--<a-modal v-model:open="open"   :confirm-loading="confirmLoading" @ok="handlerivalrevise(isHiddenGA)">
       <p>How do you want to revise?</p>
-      <textarea class="p-3 border w-100"  style="height:100%;width:100%;display:block" v-model="revisetext[index]" ></textarea>
-    </a-modal>
+      <textarea class="p-3 border w-100"  style="height:100%;width:100%;display:block" v-model="reviserivaltext" ></textarea>
+    </a-modal>-->
 </div>
 <div>
       <table class="text-sm text-left text-gray-500 dark:text-gray-400 my-2"><tbody>
@@ -327,35 +358,53 @@ let rownumber2 = ref(3);
 let isHiddenGA = ref(true);
 let isHiddenBC = ref(true);
 
-const open = ref(false);
+const openmodal = ref(false);
+const openrivalrevise = ref(false);
 const editmode = ref(false);
 const confirmLoading = ref(false);
-const revisetext=ref([])
-const showModal = () => {
-  open.value = true;
-};
+const revisetext=ref('');
+const reviserivaltext=ref('');
 
-const handleOk = (i) => {
-  console.log(revisetext.value)
-  confirmLoading.value = true;
+
+
+const handlerevise = (headline) => {
+  console.log(revisetext.value);
+  console.log(headline);
+  loading.value = true;
   const revisedata = {
-
+  "product_id": headline.product_id,
+  "appeal_target_id": headline.appeal_target_id,
+  "prompt": revisetext.value
   }
-  api.put(`https://api.j-wire.tech/v1/headlines/revise/`,appealdata, { headers: authHeader() })
+  api.put(`https://api.j-wire.tech/v1/headlines/revise/`,revisedata, { headers: authHeader() })
       .then((response) => {
         console.log(response.data.data);
-        const product_id = response.data.data.product_id;
-        const appealtargetid = response.data.data.id;
-        generateProductHeadlines(appealtargetid);
-        getAppealTargets(product_id);
+        headlines.value= response.data.data.headlines;
       })
       .catch(() => {
         console.log('not ht')
       })
-  setTimeout(() => {
-    open.value = false;
-    confirmLoading.value = false;
-  }, 2000);
+      openmodal.value=false;
+      loading.value = false;
+};
+
+const handlerivalrevise = (headline) => {
+  loading.value = true;
+  const revisedata = {
+  "product_id": headline.product_id,
+  "benchmark_id": headline.benchmark_id,
+  "prompt": reviserivaltext.value
+  }
+  api.put(`https://api.j-wire.tech/v1/headlines/revise/`,revisedata, { headers: authHeader() })
+      .then((response) => {
+        console.log(response.data.data);
+        rivalheadlines.value= response.data.data.rivalheadlines;
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+      openrivalrevise.value=false;
+      loading.value = false;
 };
 const row=ref(null);
 function loadData () {
@@ -660,8 +709,9 @@ function getBenchmarks (pid) {
       })
 }  
 
-return { row, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, getProductHeadlines,rownumber2,isHiddenGA,isHiddenBC,computedArr,min_age,max_age,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,togelrival,productImages,loading,
-      toggle,togglerival,strong_point,confirmappealmodal,confirmappeal,confirmappealtext,confirmbenchmarkmodal,confirmbenchmark,confirmbenchmarktext,submitappeal,submitbenchmark,motivation,solving_feature,gender,addgeneralappealrow,headlines,rivalheadlines,deleteRow,deleteHeadline,addbenchmarkrow,deleteRivalRow,deleteRivalHeadline,editHeadline,editRivalHeadline};
+return { row, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, getProductHeadlines,rownumber2,isHiddenGA,isHiddenBC,computedArr,min_age,max_age,revisetext ,reviserivaltext,openmodal,openrivalrevise,confirmLoading,handlerevise,handlerivalrevise,editmode,togel,togelrival,productImages,loading,
+      toggle,togglerival,strong_point,confirmappealmodal,confirmappeal,confirmappealtext,confirmbenchmarkmodal,confirmbenchmark,confirmbenchmarktext,submitappeal,submitbenchmark,motivation,solving_feature,gender,addgeneralappealrow,headlines,rivalheadlines,deleteRow,deleteHeadline,
+      addbenchmarkrow,deleteRivalRow,deleteRivalHeadline,editHeadline,editRivalHeadline};
   }
  
 }
