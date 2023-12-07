@@ -52,7 +52,7 @@ const row=ref(null);
 function loadData () {
   console.log(route.params.parentid)
 if(route.params.parentid != 0){
-  api.get(`http://159.223.87.212/api/v1/child-products/${route.params.id}`, { headers: authHeader() })
+  api.get(`https://api.j-wire.tech/v1/child-products/${route.params.id}`, { headers: authHeader() })
       .then((response) => {
         console.log("row.value")
         row.value = response.data.data;
@@ -67,7 +67,7 @@ if(route.params.parentid != 0){
 }
 
 else{
-  api.get(`http://159.223.87.212/api/v1/products/${route.params.id}`, { headers: authHeader() })
+  api.get(`https://api.j-wire.tech/v1/products/${route.params.id}`, { headers: authHeader() })
       .then((response) => {
         console.log("row.value")
         row.value = response.data.data;
@@ -92,7 +92,7 @@ else{
   const router = useRouter();
   const fetchImage = async (productId, imageId) => {
       try {
-        const response = await axios.get(`http://159.223.87.212/api/v1/products/images/${imageId}`, {
+        const response = await axios.get(`https://api.j-wire.tech/v1/products/images/${imageId}`, {
           responseType: 'arraybuffer',
         });
 
@@ -113,7 +113,7 @@ else{
   productInfo.value = productInfo
 }
     if(row.value.parent_id != undefined){
-      api.post(`http://159.223.87.212/api/v1/child-products/child-product-info`,new URLSearchParams({"product_id":row.value.id,"product_info":productInfo.value}), { headers: authHeader() })
+      api.post(`https://api.j-wire.tech/v1/child-products/child-product-info`,new URLSearchParams({"product_id":row.value.id,"product_info":productInfo.value}), { headers: authHeader() })
         .then((res) => {
           //success = true
           console.log(res);
@@ -125,7 +125,7 @@ else{
         })
     }
     else{
-    api.post(`http://159.223.87.212/api/v1/products/product-info`,new URLSearchParams({"product_id":row.value.id,"product_info":productInfo.value}), { headers: authHeader() })
+    api.post(`https://api.j-wire.tech/v1/products/product-info/create`,new URLSearchParams({"product_id":row.value.id,"product_info":productInfo.value}), { headers: authHeader() })
         .then((res) => {
           //success = true
           console.log(res);

@@ -134,3 +134,23 @@ a,
 
 .q-table tr th{background-color: #f3f4f6;}
 .q-table .childtr td{border-bottom: 1px solid #eeeeee;}
+.q-field__native:focus,.q-field__native:hover{border:none}
+/* Absolute Center Spinner */
+.loadingspinner {
+  position: fixed;
+  z-index: 999;
+  overflow: show;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.my-box{
+min-height: 100px;
+display: flex;
+align-items: center;
+}
+
+.bg-grey{background:#f3f4f6}

@@ -180,7 +180,7 @@ const rows =ref(null);
 
 const getHeadlines = (product_id) => {
   console.log(product_id);
-  api.get(`http://159.223.87.212/api/v1/headlines/`,new URLSearchParams( {"product_id":product_id}), { headers: authHeader() })
+  api.get(`https://api.j-wire.tech/v1/headlines/`,new URLSearchParams( {"product_id":product_id}), { headers: authHeader() })
       .then((response) => {
         headlines.value = response.data.data;
         console.log(headlines.value);

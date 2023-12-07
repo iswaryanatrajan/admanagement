@@ -22,34 +22,44 @@
   </table>
 
   <div>
+    <q-spinner v-if = "loading"
+        color="primary"
+        size="4em"
+        class="loadingspinner"
+        :thickness="3"
+      /> 
+
 <tabs>
   <tab name="General Appeal">
   <div class="flex no-wrap">
   <form class="">
     <div class="w-full overflow-auto">
     <table class="text-sm text-left text-gray-500 dark:text-gray-400 my-5">
-    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+   <!-- <thead class="text-xs text-gray-700 uppercase bg-gray-100">
       <tr>
-        <th class="w-2/5 px-6 py-3 w-3">①訴求(appeal)　Strong point</th>
-        <th class="w-2/5 px-6 py-3">②ターゲット who is the target?</th>
+        <th class="w-2/5 px-6 py-3"></th>
         <th class="w-1/5 px-6 py-3"></th>
       </tr>
-    </thead>
+    </thead>-->
     <tbody>
       <tr class="border" v-for="(generalappealform,i) in generalappealforms" v-bind:key="generalappealform.id">
-        <td class="px-4 py-2 font-medium text-gray-700">
-          <textarea class="p-3 border  border-gray-300 rounded-lg" rows="14" cols="20"  v-model="generalappealform.strong_point" placeholder="Enter a strong point"></textarea>
-        </td>
-        <td class="w-1/px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
+
+        <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
+          <div class="text-h7 mb-3">①訴求(appeal)　Strong point</div>
+          <div class="mb-3">
+            <textarea class="p-3 border  border-gray-300 rounded-lg w-full" rows="10"   v-model="generalappealform.strong_point" :disabled="generalappealform.editable==false" placeholder="Enter a strong point"></textarea>
+            </div>
+            <div class="text-h7 mb-3">②ターゲット who is the target?</div>
           <div class="mb-3 flex items-center">
-            <label for="age" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100">Age:</label>
-            <select id="age" v-model="generalappealform.min_age" class="w-max mr-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+           
+            <label for="age" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100" >Age:</label>
+            <select id="age" v-model="generalappealform.min_age" :disabled="generalappealform.editable==false" class="w-max mr-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option>Select Age</option>
               <option v-for="index in 100" :key="index" :value="index">
                   {{ index }}
               </option>
             </select> ~
-            <select id="age" v-model="generalappealform.max_age" class="w-max ml-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select id="age" v-model="generalappealform.max_age" :disabled="generalappealform.editable==false" class="w-max ml-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option>Select Age</option>
               <option v-for="index in computedArr" :key="index" :value="index">
                   {{ index }}
@@ -59,7 +69,7 @@
           </div>
           <div class="mb-3">
             <label for="gender" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100">Gender:</label>
-            <select id="gender" v-model="generalappealform.gender"  class="w-max  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select id="gender" v-model="generalappealform.gender" :disabled="generalappealform.editable==false" class="w-max  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option value="Select">Select Gender</option>
               <option value="男性">Male （男性）</option>
               <option value="女性">Female （女性）</option>
@@ -68,34 +78,35 @@
           </div>
           <div class="mb-3">
           <label for="why" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-auto">ターゲットにする悩みまたは欲しい理由:<br/> Why they want to have it?</label>
-          <textarea class="p-3 border border-gray-300 rounded-lg" v-model="generalappealform.motivation" placeholder=""></textarea>
+          <textarea class="p-3 border border-gray-300 w-full rounded-lg" :disabled="generalappealform.editable==false" v-model="generalappealform.motivation" placeholder=""></textarea>
           </div>
           <div>
           <label for="productfeature" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">どの特徴が、どのように欲しくなるのか、解決するのか:<br/> What type of your product feature would solve this issue?</label>
-          <textarea class="p-3 border border-gray-300 w-full rounded-lg" v-model="generalappealform.solving_feature" placeholder=""></textarea>
+          <textarea class="p-3 border border-gray-300 w-full rounded-lg" :disabled="generalappealform.editable==false" v-model="generalappealform.solving_feature" placeholder=""></textarea>
           </div>
         </td>
         <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap flex flex-start w-max items-center">
          <!--- <button type="button" @click="isHiddenGA = false" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>-->
-         <button type="button"  @click="confirmappeal(i)" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
-
-            <svg @click="deleteRow(i)"  class="w-6 h-6 text-grey-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
-                </svg>  
-                <q-dialog v-model="confirmappealmodal" persistent>
-                  <q-card style="width: 900px; max-width: 80vw;">
-                    <q-toolbar>
-                      <q-toolbar-title>Confirm Appeal Target</q-toolbar-title>
-                      <q-btn flat round dense icon="close" v-close-popup />
-                    </q-toolbar>
-                    <q-card-section>
-                      <textarea class="p-3 border w-full"  rows="3" v-model="confirmappealtext" ></textarea>
-                    </q-card-section>
-                  <q-card-section>
-                  <q-btn  color="primary" @click="submitappeal(i)" icon="add" label="Save" v-close-popup/>
-                  </q-card-section>
-                  </q-card>
-                </q-dialog>
+         <button type="button" v-if="generalappealform.editable"  @click="confirmappeal(i)" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
+         <button type="button" v-else  @click="getProductHeadlines(i)" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
+    
+          <svg @click="deleteRow(i)"  class="w-6 h-6 text-grey-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z"/>
+          </svg>  
+          <q-dialog v-model="confirmappealmodal" persistent>
+            <q-card style="width: 900px; max-width: 80vw;">
+              <q-toolbar>
+                <q-toolbar-title>Confirm Appeal Target</q-toolbar-title>
+                <q-btn flat round dense icon="close" v-close-popup />
+              </q-toolbar>
+              <q-card-section>
+                <textarea class="p-3 border w-full"  rows="3" v-model="confirmappealtext" ></textarea>
+              </q-card-section>
+            <q-card-section>
+            <q-btn  color="primary" @click="submitappeal(i)" icon="add" label="Save" v-close-popup/>
+            </q-card-section>
+            </q-card>
+          </q-dialog>
 
         </td>
       
@@ -119,8 +130,8 @@
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 14 3-3m-3 3 3 3m-3-3h16v-3m2-7-3 3m3-3-3-3m3 3H3v3"/>
     </svg>   
 </button>
-<a-modal v-model:open="open"   :confirm-loading="confirmLoading" @ok="handleOk">
-      <p>How do you want to revise?</p>
+<a-modal v-model:open="open" :confirm-loading="confirmLoading" @ok="handleOk()">
+      <p>How do you want to revise? {{ headlines[1]}} </p>
       <textarea class="p-3 border w-100"  style="height:100%;width:100%;display:block" v-model="revisetext[index]" ></textarea>
     </a-modal>
 </div>
@@ -299,6 +310,7 @@ const confirmappealmodal = ref(false);
 const confirmappealtext =ref("");
 const confirmbenchmarkmodal =ref(false);
 const confirmbenchmarktext =ref("");
+const loading = ref(false);
 
 const strong_point = ref("");
 const motivation = ref("");
@@ -306,14 +318,10 @@ const solving_feature = ref("");
 const min_age= ref(10);
 const max_age= ref(20);
 let generalappealforms = ref([ 
-  {strong_point: '', motivation: '',solving_feature:'',min_age:10,max_age:20,gender:''},
-  {strong_point: '', motivation: '',solving_feature:'',min_age:10,max_age:20,gender:''},
-  {strong_point: '', motivation: '',solving_feature:'',min_age:10,max_age:20,gender:''},
+  {strong_point: '', motivation: '',solving_feature:'',min_age:10,max_age:20,gender:'',editable:true},
 ]);
 let benchmarkforms = ref([ 
-  {rival_product_info: '', weak_point: '',improvement:''},
-  {rival_product_info: '', weak_point: '',improvement:''},
-  {rival_product_info: '', weak_point: '',improvement:''},
+  {rival_product_info: '', weak_point: '',improvement:'',editable:true},
 ]);
 let rownumber2 = ref(3);
 let isHiddenGA = ref(true);
@@ -327,9 +335,23 @@ const showModal = () => {
   open.value = true;
 };
 
-const handleOk = () => {
+const handleOk = (i) => {
   console.log(revisetext.value)
   confirmLoading.value = true;
+  const revisedata = {
+
+  }
+  api.put(`https://api.j-wire.tech/v1/headlines/revise/`,appealdata, { headers: authHeader() })
+      .then((response) => {
+        console.log(response.data.data);
+        const product_id = response.data.data.product_id;
+        const appealtargetid = response.data.data.id;
+        generateProductHeadlines(appealtargetid);
+        getAppealTargets(product_id);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
   setTimeout(() => {
     open.value = false;
     confirmLoading.value = false;
@@ -337,7 +359,8 @@ const handleOk = () => {
 };
 const row=ref(null);
 function loadData () {
-  api.get(`http://159.223.87.212/api/v1/products/${route.params.id}`, { headers: authHeader() })
+  loading.value=true;
+  api.get(`https://api.j-wire.tech/v1/products/${route.params.id}`, { headers: authHeader() })
       .then((response) => {
         row.value = response.data.data;
         console.log(row.value);
@@ -346,6 +369,7 @@ function loadData () {
         }
         getAppealTargets(row.value.id);
         getBenchmarks(row.value.id);
+        loading.value = false;
       })
       .catch(() => {
         console.log('not ht')
@@ -361,7 +385,7 @@ function loadData () {
 
   const fetchImage = async (productId, imageId) => {
       try {
-        const response = await axios.get(`http://159.223.87.212/api/v1/products/images/${imageId}`, {
+        const response = await axios.get(`https://api.j-wire.tech/v1/products/images/${imageId}`, {
           responseType: 'arraybuffer',
         });
 
@@ -381,6 +405,7 @@ const showrivalheadlines = ref(false);
 const togel = ref();
 const togelrival = ref();
 const submitappeal = (i) => {
+
   const appealdata= {
   product_id:route.params.id,
   strong_point:generalappealforms.value[i].strong_point,
@@ -391,29 +416,38 @@ const submitappeal = (i) => {
     solving_feature:generalappealforms.value[i].solving_feature
 };
   console.log(appealdata);
- api.post(`http://159.223.87.212/api/v1/products/appeal-target/`,appealdata, { headers: authHeader() })
+  console.log(generalappealforms.value[i].id);
+  const appealtarget_id=generalappealforms.value[i].id;
+  loading.value= true;
+  /*if(appealtarget_id != undefined){
+  console.log(appealtarget_id);
+    api.put(`https://api.j-wire.tech/v1/products/appeal-target/update/`+appealtarget_id,appealdata, { headers: authHeader() })
       .then((response) => {
         console.log(response.data.data);
         const product_id = response.data.data.product_id;
-        const appealtargetid = response.data.data.id;
-        getProductHeadlines(appealtargetid);
+        getAppealTargets(product_id);
+        getProductHeadlines(appealtarget_id);
+        loading.value= false;
       })
       .catch(() => {
         console.log('not ht')
       })
-     /* 
-    const appealdata= confirmappealtext.value;
-    api.post(`http://159.223.87.212/api/v1/products/appeal-target/`,appealdata, { headers: authHeader() })
+  }
+  else{*/
+ api.post(`https://api.j-wire.tech/v1/products/appeal-target/create/`,appealdata, { headers: authHeader() })
       .then((response) => {
         console.log(response.data.data);
         const product_id = response.data.data.product_id;
         const appealtargetid = response.data.data.id;
-        getProductHeadlines(appealtargetid);
+        generateProductHeadlines(appealtargetid);
+        getAppealTargets(product_id);
+
       })
       .catch(() => {
         console.log('not ht')
       })
-     */
+    //}
+
 }
 const confirmappeal = (i) => {
   confirmappealtext.value = "この商品は" + generalappealforms.value[i].strong_point+"という特徴があります。\nその人たちは"+ generalappealforms.value[i].min_age + "~" + generalappealforms.value[i].max_age + "才くらいの" + generalappealforms.value[i].gender + "で" + generalappealforms.value[i].motivation + "\nこの商品は" + generalappealforms.value[i].solving_feature + "といったことを説明したキャッチコピーを10とおり作成したいです。"
@@ -435,7 +469,7 @@ const submitbenchmark = (i) => {
   improvement: benchmarkforms.value[i].improvement,
 };
   console.log(appealdata);
- api.post(`http://159.223.87.212/api/v1/benchmark/`,appealdata, { headers: authHeader() })
+ api.post(`https://api.j-wire.tech/v1/benchmark/create`,appealdata, { headers: authHeader() })
       .then((response) => {
         console.log(response.data.data);
         const product_id = response.data.data.product_id;
@@ -447,7 +481,7 @@ const submitbenchmark = (i) => {
       })
    /* 
     const appealdata= confirmbenchmarktext.value;
-    api.post(`http://159.223.87.212/api/v1/benchmark`,appealdata, { headers: authHeader() })
+    api.post(`https://api.j-wire.tech/v1/benchmark`,appealdata, { headers: authHeader() })
       .then((response) => {
         console.log(response.data.data);
         const product_id = response.data.data.product_id;
@@ -460,14 +494,32 @@ const submitbenchmark = (i) => {
      */
 }
 
-function getProductHeadlines (appealtargetid) {
-  api.post(`http://159.223.87.212/api/v1/headlines/`,new URLSearchParams( {"appeal_target_id":appealtargetid}),{ headers: authHeader() })
+const getProductHeadlines = (i) => {
+  loading.value=true;
+  const appeal_targetid = generalappealforms.value[i].id;
+  api.post(`https://api.j-wire.tech/v1/headlines/generate/`,new URLSearchParams( {"appeal_target_id":appeal_targetid}),{ headers: authHeader() })
       .then((response) => {
         console.log(response.data.data);
         headlines.value= response.data.data.headlines;
         showheadlines.value=true;
         togel.value = ref(headlines.value.reduce((agg, item) => ({ ...agg, [item.id]: false }), {}))
         console.log(togel);
+        loading.value= false;
+      })
+      .catch(() => {
+        console.log('not ht')
+      });
+  }
+
+  function generateProductHeadlines (appealtargetid) {
+  api.post(`https://api.j-wire.tech/v1/headlines/generate/`,new URLSearchParams( {"appeal_target_id":appealtargetid}),{ headers: authHeader() })
+      .then((response) => {
+        console.log(response.data.data);
+        headlines.value= response.data.data.headlines;
+        showheadlines.value=true;
+        togel.value = ref(headlines.value.reduce((agg, item) => ({ ...agg, [item.id]: false }), {}))
+        console.log(togel);
+        loading.value= false;
       })
       .catch(() => {
         console.log('not ht')
@@ -475,7 +527,7 @@ function getProductHeadlines (appealtargetid) {
   }
 
   function getRivalHeadlines (benchmarkid) {
-  api.post(`http://159.223.87.212/api/v1/headlines/rival`,new URLSearchParams( {"benchmark_id":benchmarkid}),{ headers: authHeader() })
+  api.post(`https://api.j-wire.tech/v1/headlines/rival/generate`,new URLSearchParams( {"benchmark_id":benchmarkid}),{ headers: authHeader() })
       .then((response) => {
         console.log(response.data.data.headlines);
         rivalheadlines.value= response.data.data.headlines;
@@ -502,23 +554,59 @@ const addbenchmarkrow = () => {
   benchmarkforms.value = [...benchmarkforms.value,  {rival_product_info: '', weak_point: '',improvement:''}];
 }
 const deleteRow = (i) => {
-  generalappealforms.value.splice(generalappealforms.value[i], 1);
+  if((generalappealforms.value[i].id) != undefined){
+    api.delete(`https://api.j-wire.tech/v1/products/appeal-target/delete/`+ generalappealforms.value[i].id,{ headers: authHeader() })
+      .then((response) => {
+        console.log("Row deleted");
+        getAppealTargets(route.params.id);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+  }
+ else generalappealforms.value.splice(i, 1);
 }
 const deleteRivalRow = (i) => {
-  benchmarkforms.value.splice(benchmarkforms.value[i], 1);
+  
+  if((benchmarkforms.value[i].id) != undefined){
+    api.delete(`https://api.j-wire.tech/v1/products/benchmark/delete/`+ benchmarkforms.value[i].id,{ headers: authHeader() })
+      .then((response) => {
+        console.log("Row deleted");
+        getAppealTargets(route.params.id);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+  }
+else
+  benchmarkforms.value.splice(i, 1);
 }
 
 const deleteHeadline = (i) => {
-  headlines.value.splice(headlines.value[i], 1);
+  api.delete(`https://api.j-wire.tech/v1/headlines/delete/`+headlines.value[i].id, { headers: authHeader() })
+  .then((response) => {
+        console.log(response.data);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+  headlines.value.splice(i, 1);
 }
 
 
 const deleteRivalHeadline = (i) => {
-  rivalheadlines.value.splice(rivalheadlines.value[i], 1);
+  api.delete(`https://api.j-wire.tech/v1/headlines/delete/`+headlines.value[i].id, { headers: authHeader() })
+  .then((response) => {
+        console.log(response.data);
+      })
+      .catch(() => {
+        console.log('not ht')
+      })
+  rivalheadlines.value.splice(i, 1);
 }
 
 const editRivalHeadline = (i) => {
-  api.put(`http://159.223.87.212/api/v1/headlines`,new URLSearchParams({"headline_id":rivalheadlines.value[i].id,"headline":rivalheadlines.value[i].headline}), { headers: authHeader() })
+  api.put(`https://api.j-wire.tech/v1/headlines/update/`+rivalheadlines.value[i].id,{"headline":rivalheadlines.value[i].headline}, { headers: authHeader() })
       .then((response) => {
         console.log(response.data);
       })
@@ -527,7 +615,7 @@ const editRivalHeadline = (i) => {
       })
 }
 const editHeadline = (i) => {
-  api.put(`http://159.223.87.212/api/v1/headlines`,new URLSearchParams({"headline_id":headlines.value[i].id,"headline":headlines.value[i].headline}), { headers: authHeader() })
+  api.put(`https://api.j-wire.tech/v1/headlines/update/`+headlines.value[i].id,{"headline":headlines.value[i].headline}, { headers: authHeader() })
       .then((response) => {
         console.log(response.data);
       })
@@ -546,9 +634,14 @@ function togglerival(id) {
 
 
 function getAppealTargets (pid) {
-      api.get(`http://159.223.87.212/api/v1/products/appeal-target/?product_id=`+pid, { headers: authHeader() })
+      api.get(`https://api.j-wire.tech/v1/products/appeal-target/?product_id=`+pid, { headers: authHeader() })
       .then((response) => {
-        generalappealforms.value  = response.data.data.appeal_targets
+        generalappealforms.value  = response.data.data.appeal_targets;
+        console.log(generalappealforms.value);
+        generalappealforms.value = generalappealforms.value.map(obj => ({ ...obj, editable: false }));
+   
+        //generalappealforms.value.map(obj => ({ ...obj, ["editable"]:false}));
+       // generalappealforms.value.forEach((v,i,arr)=>arr[i]=`editable:false`)
         console.log(generalappealforms.value);
       })
       .catch(() => {
@@ -557,7 +650,7 @@ function getAppealTargets (pid) {
 }  
 
 function getBenchmarks (pid) {
-      api.get(`http://159.223.87.212/api/v1/benchmark/?product_id=`+pid, { headers: authHeader() })
+      api.get(`https://api.j-wire.tech/v1/benchmark/?product_id=`+pid, { headers: authHeader() })
       .then((response) => {
         benchmarkforms.value  = response.data.data.benchmarks
         console.log(benchmarkforms.value);
@@ -567,7 +660,7 @@ function getBenchmarks (pid) {
       })
 }  
 
-return { row, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, rownumber2,isHiddenGA,isHiddenBC,computedArr,min_age,max_age,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,togelrival,productImages,
+return { row, showheadlines,showrivalheadlines,generalappealforms,benchmarkforms, getProductHeadlines,rownumber2,isHiddenGA,isHiddenBC,computedArr,min_age,max_age,revisetext ,open,confirmLoading,showModal,handleOk,editmode,togel,togelrival,productImages,loading,
       toggle,togglerival,strong_point,confirmappealmodal,confirmappeal,confirmappealtext,confirmbenchmarkmodal,confirmbenchmark,confirmbenchmarktext,submitappeal,submitbenchmark,motivation,solving_feature,gender,addgeneralappealrow,headlines,rivalheadlines,deleteRow,deleteHeadline,addbenchmarkrow,deleteRivalRow,deleteRivalHeadline,editHeadline,editRivalHeadline};
   }
  

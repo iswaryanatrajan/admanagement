@@ -83,6 +83,7 @@
             v-for="col in props.cols"
             :key="col.name"
             :props="props"
+            dense
           >
             {{ col.label }}
           </q-th>
@@ -111,6 +112,9 @@
           <RouterLink :to= "{ name: 'productinfo', params: { id: props.row.id, parentid: 0}}">
           <q-btn  color="primary" label="見出しの作成" ></q-btn>
           </RouterLink>
+          <a>
+            <q-btn @click="productsetting = true" color="primary" label=" 商品設定（自社）" ></q-btn></a>
+
         </q-td>
         </q-tr>
         
@@ -141,6 +145,8 @@
             <RouterLink :to= "{ name: 'productinfo', params: { id: childRow._id, parentid: childRow.parent_id}}">
             <q-btn  color="primary" label="見出しの作成" ></q-btn>
             </RouterLink>
+     
+           
         </q-td>
         
    <!-- <q-td colspan="100%" >
@@ -205,6 +211,250 @@
       </div>
       </q-card>
       </q-dialog>
+      <q-dialog v-model="productsetting" persistent border>
+      <q-card style="max-width: 80vw;"  >
+        <q-toolbar class="my-3">
+          <q-toolbar-title>Product Settings</q-toolbar-title>
+
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+        <div class="q-pa-md row items-center justify-center q-gutter-lg mb-5">
+
+     <q-card v-ripple  @click="rivalweakpointmodal = true" class="my-box cursor-pointer q-hoverable" >
+      <span class="q-focus-helper"></span>
+      <q-card-section>
+        <div class="text-h6 text-center">ライバルの<br/>ウィークポイント探し</div>
+      </q-card-section>
+        <div>
+    </div>
+    </q-card>
+    <q-card v-ripple class="my-box cursor-pointer q-hoverable" >
+      <span class="q-focus-helper"></span>
+      <q-card-section>
+        <div class="text-h6 text-center mb-2">商品ページの作成<br/></div>
+      </q-card-section>
+<!--
+      <q-list dense class="text-center">
+      <q-item   v-for="asinlist in asinlists" :key="asinlist" style="min-height: 0;" >
+        <q-item-section>{{asinlist}}</q-item-section>
+      </q-item>
+      </q-list>-->
+    </q-card>
+    <q-card v-ripple class="my-box cursor-pointer q-hoverable" >
+      <span class="q-focus-helper"></span>
+      <q-card-section>
+        <div class="text-h6 text-center mb-2">コピーの作成</div>
+      </q-card-section>
+
+    </q-card>
+      </div>
+      </q-card>
+      </q-dialog>
+      <q-dialog v-model="rivalweakpointmodal" persistent>
+      <q-card style="width: 900px; max-width: 80vw;"  >
+        <q-toolbar>
+          <q-toolbar-title></q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+        <div class="q-pa-md row items-center justify-center q-gutter-lg mb-5">
+
+     <q-card @click="rivalsettingsmodal = true" v-ripple v-for="asinlist in asinlists" :key="asinlist" class="my-box cursor-pointer q-hoverable" >
+      <span class="q-focus-helper"></span>
+      <q-card-section>
+        <div class="text-h6 text-center">{{ asinlist }}</div>
+      </q-card-section>
+        <div>
+    </div>
+    </q-card>
+  
+      </div>
+      </q-card>
+      </q-dialog>
+      <q-dialog v-model="rivalsettingsmodal" persistent>
+      <q-card style="width: 1000px; max-width: 90vw;"  >
+        <q-toolbar>
+          <q-toolbar-title></q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+        <div class="q-pa-md">
+    <div class="q-gutter-y-md">
+      <q-card>
+      <q-tabs
+        v-model="rivalsettings_tab"
+        inline-label
+        class="bg-grey shadow-2 justify-start"
+        active-color="white"
+        indicator-color="white"
+          align="justify"
+          narrow-indicator
+      >
+        <q-tab name="rivalinfo"  label="ライバル情報の入力"></q-tab>
+        <q-tab name="rivalweakpoint"  label="出力（ライバルの欠点、自社のペルソナ）"></q-tab>
+      </q-tabs>
+      <q-separator />
+
+<q-tab-panels v-model="rivalsettings_tab" animated>
+  <q-tab-panel name="rivalinfo">
+    <div class="text-h6">ライバル情報の入力</div>
+    <q-form ref="rivalinfo"
+      @submit="onSubmit"
+      @reset="onReset"
+      class="q-gutter-md"
+      
+    >
+    <q-input outlined v-model="product_title" label="Product Title"   :rules="[ val => val && val.length > 0 || 'Please enter title']"/>
+    <q-input
+      v-model="bullets"
+      label="5過剰(bullets)"
+      outlined
+      autogrow
+    />
+    <q-input
+      v-model="prod_contents"
+      label="商品紹介コンテンツ(A+)"
+      outlined
+      autogrow
+    />
+    <q-input
+      v-model="reviews"
+      label="レビュー（悪い） (reviews)"
+      outlined
+      autogrow
+    />
+    <div>
+        <q-btn label="Submit" type="submit" color="primary"/>
+        <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
+      </div>
+    </q-form>
+  </q-tab-panel>
+  <q-tab-panel name="rivalweakpoint">
+    <div class="text-h8"> ライバルのウィークポイントを見つけてください。</div>
+    <div class="q-pa-md q-gutter-md" style="max-width: 350px" >
+      <q-layout>
+      <q-page-container>
+   
+      <q-row v-for="(category,i) in categories" :key ="i" class="q-mb-md">
+        <q-col class="col-6">
+    <q-toggle v-model="category.title" :label="category.label" />
+    <q-list bordered separator v-for="(subcat,index) in category.values" :key="index">
+      <q-item clickable v-ripple :active="category.title">
+        <q-item-section>{{ subcat }}</q-item-section>
+        <q-item-section side @click="delweakpoint(category,index)">X</q-item-section>
+      </q-item>
+    </q-list>
+    </q-col>
+
+  </q-row>
+</q-page-container>
+</q-layout>
+  <!--
+    <q-toggle v-model="electric" label="家電" />
+    <q-list bordered separator>
+      <q-item clickable v-ripple :active="electric">
+        <q-item-section>操作が難しそう（スペックが複雑で）</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+      <q-item clickable v-ripple :active="electric">
+        <q-item-section>スペックが古い</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+      <q-item clickable v-ripple :active="electric">
+        <q-item-section>専門家の確認がない</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+      <q-item clickable v-ripple :active="electric">
+        <q-item-section>望んでいる機能が搭載されていない、または明確ではない</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+      <q-item clickable v-ripple :active="electric">
+        <q-item-section>スペックが低い</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+      <q-item clickable v-ripple :active="electric">
+        <q-item-section>健康的被害を受ける成分など</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+    </q-list>
+    <q-toggle v-model="apparel" label="アパレル" />
+    <q-list bordered separator>
+      <q-item clickable v-ripple :active="apparel">
+        <q-item-section>サイズが明記されていないため</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+      <q-item clickable v-ripple :active="apparel">
+        <q-item-section>素材の証明がない</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+      <q-item clickable v-ripple :active="apparel">
+        <q-item-section>梱包がしっかりしていない</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+      </q-list>
+      <q-toggle v-model="present" label="プレゼント" />
+    <q-list bordered separator>
+      <q-item clickable v-ripple :active="present">
+        <q-item-section>梱包がしっかりしていない</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+    </q-list>
+    <q-toggle v-model="fashion" label="アパレル、ファッション、小物、雑貨" />
+    <q-list bordered separator>
+      <q-item clickable v-ripple :active="fashion">
+        <q-item-section>デザインのこだわり、色のこだわりがない</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+    </q-list>
+    <q-toggle v-model="bag" label="アパレル、財布、バッグ" />
+    <q-list bordered separator>
+      <q-item clickable v-ripple :active="bag">
+        <q-item-section>縫製が雑</q-item-section>
+        <q-item-section side @click="delweakpoint()">X</q-item-section>
+      </q-item>
+    </q-list>
+    -->
+    </div>
+    <div class="addCategory my-3">
+    <q-btn label="Add Category" @click=" addCategorydiv = true" type="button" color="primary"/>
+    <q-card class="lg:w-2/3 my-3 border" v-if="addCategorydiv">
+      <q-form 
+      @submit="addCategory"
+      class="q-gutter-md"
+    >
+    <q-card-section><q-input v-model="category_label" label="Enter Category"  /></q-card-section>
+      <q-card-section> <textarea class="p-3 border w-full"  v-model="category_weakpoint" placeholder="Enter weakpoints"  ></textarea></q-card-section>
+      <q-card-section> <q-btn label="Submit" type="submit" color="primary"/></q-card-section>
+        </q-form>
+  </q-card>
+</div> 
+    <q-item-section>
+    <textarea class="p-3 "  v-model="category_additionaltext" placeholder="Additional Text"  ></textarea>
+  </q-item-section>    
+  <q-card class="my-3 p-3 border">
+    <div class="text-h6" >ライバルの情報</div>
+    <q-card-section>
+    <label class="text-h8">ライバルの商品タイトル</label>
+    <p>{{ product_title }}</p>
+  </q-card-section>   
+  <q-card-section>
+    <label class="text-h8">ライバルの商品特徴</label>
+    <p>{{ bullets }}</p>
+  </q-card-section>  
+  <q-card-section>
+    <label class="text-h8">他社の商品紹介コンテンツ</label>
+    <p>{{prod_contents  }}</p>
+  </q-card-section>  
+  <q-card-section>
+    <label class="text-h8">レビュー（悪い）</label>
+    <p>{{reviews  }}</p>
+  </q-card-section> 
+  </q-card>    
+  </q-tab-panel>
+  </q-tab-panels>
+  </q-card>
+      </div>
+      </div>
+      </q-card>
+      </q-dialog>
 </div>
   </div>
 
@@ -228,6 +478,16 @@ export default {
     const route = useRoute();
     const $q = useQuasar();
     const addprompt = ref(false);
+    const productsetting = ref(false);
+    const rivalweakpointmodal = ref(false);
+    const rivalsettingsmodal = ref(false);
+    const rivalsettings_tab = ref("rivalinfo");
+    const supplements = ref(true);
+    const apparel = ref(true);
+    const bag = ref(true);
+    const electric = ref(true);
+    const fashion = ref(true);
+    const present = ref(true);
     const product_name= ref("");
     const asin= ref("");
     const image_src= ref("");
@@ -246,7 +506,46 @@ export default {
     const parent_id=ref("");
 const editselected_row = ref({});
 const editprompt=ref(false);
+const category_label = ref('');
+const category_weakpoint = ref('');
+const addCategorydiv = ref(false);
+const categories = ref([
+  {
+    title:'Supplements',
+    label:'サプリ、肌、食品',
+    values: ['また、健康的被害を受ける成分など']
+  },
+  {
+    title:'Electric',
+    label:'家電',
+    values: ['操作が難しそう（スペックが複雑で）','スペックが古い','専門家の確認がない','望んでいる機能が搭載されていない、または明確ではない','スペックが低い','健康的被害を受ける成分など']
+  },
+  {
+    title:'Apparel',
+    label:'アパレル',
+    values: ['サイズが明記されていないため','素材の証明がない','梱包がしっかりしていない']
+  },
+  {
+    title:('Present'),
+    label:'プレゼント',
+    values: ['梱包がしっかりしていない']
+  },
+  {
+    title:('Fashion'),
+    label:'アパレル、ファッション、小物、雑貨',
+    values: ['デザインのこだわり、色のこだわりがない']
+  },
+  {
+    label:'Bag',
+    values: ['縫製が雑']
+  },
+])
+for(let i=0;i<categories.value.length;i++){
+  categories.value[i].label=true;
+}
 
+
+const asinlists=ref(['B0CHX2F5QT','B0CHX2F5QV','B0CHX2DFQV','B0CHX345QV','B1DHX2F5QV','B0CHX2F5QB','B0CHX2F5QC','B0CHX2F5QD','B0CHX2F5QE','B0CHX2F5QF'])
   //const data = ref(null)
 
     const columns = ref([
@@ -265,10 +564,11 @@ const editprompt=ref(false);
     label: 'Product Name',
     align: 'left',
     field: row => row.product_name,
-    sortable: true
+    sortable: true,
+    style: 'width: 300px;max-width:300px;white-space: wrap;',
   },
-  { name: 'image', align: 'center', label: 'Image', field: 'image_id' },
-  { name: 'asin', align: 'center', label: 'ASIN', field: 'asin' },
+  { name: 'image', align: 'left', label: 'Image', field: 'image_id' },
+  { name: 'asin', align: 'left', label: 'ASIN', field: 'asin' },
 ]);
 const childcolumns = ref([
     {
@@ -306,7 +606,7 @@ const childcolumns = ref([
     }
 const onDeleteChild = (row) => {
       console.log(`Deleting row - '${row._id}'`)
-      api.delete(`http://159.223.87.212/api/v1/child-products/${row._id}`,{headers:authHeader()}) .then((response) => {
+      api.delete(`https://api.j-wire.tech/v1/child-products/${row._id}`,{headers:authHeader()}) .then((response) => {
         console.log(response.data);
         loadData();
       })
@@ -316,7 +616,7 @@ const onDeleteChild = (row) => {
     }
     
     const onDelete = (row) => {
-      api.delete(`http://159.223.87.212/api/v1/products/${row.id}`,{headers:authHeader()})
+      api.delete(`https://api.j-wire.tech/v1/products/${row.id}`,{headers:authHeader()})
       .then((response) => {
         console.log(response.data.message)
         console.log(`Deleted post with ID ${row.id}`);
@@ -329,9 +629,24 @@ const onDeleteChild = (row) => {
       console.log(`Deleting row - '${row.id}'`)
   }
 
+  const delweakpoint = (row,index) => {
+    console.log(row);
+    for(let i=0;i<categories.value.length;i++){
+      if(categories.value[i].title== row.title){
+        categories.value[i].values.splice(categories.value[i].values[index], 1);
+        console.log(categories.value[i].values.length);
+       if(categories.value[i].values.length == 0){
+          categories.value.splice(i, 1);
+        }
+      }
+    }
+
+    
+  }
 
 
-   /* fetch('http://159.223.87.212/api/v1/'+accountid.value+'/products')
+
+   /* fetch('https://api.j-wire.tech/v1/'+accountid.value+'/products')
     .then(response => response.json())
     .then(data => rows.value = data.data.products);
 
@@ -362,7 +677,7 @@ const onDeleteChild = (row) => {
   const fetchImage = async (productId, imageId) => {
       try {
       console.log(imageId);
-        const response = await axios.get(`http://159.223.87.212/api/v1/products/images/${imageId}`, {
+        const response = await axios.get(`https://api.j-wire.tech/v1/products/images/${imageId}`, {
           responseType: 'arraybuffer',
         });
 
@@ -378,7 +693,7 @@ const onDeleteChild = (row) => {
    const fetchchildImage = async (productId,childId, imageId) => {
       try {
       console.log(imageId);
-        const response = await axios.get(`http://159.223.87.212/api/v1/products/images/${imageId}`, {
+        const response = await axios.get(`https://api.j-wire.tech/v1/products/images/${imageId}`, {
           responseType: 'arraybuffer',
         });
 
@@ -420,7 +735,7 @@ const onDeleteChild = (row) => {
       formData.append('serial_no', String(sno.value));
       formData.append('product_info', product_name.value);
 
-    axios.post("http://159.223.87.212/api/v1/products",formData,{headers:authHeader()}) .then((response) => {
+    axios.post("https://api.j-wire.tech/v1/products",formData,{headers:authHeader()}) .then((response) => {
         console.log(response.data);
         parent_id.value =response.data.data.id;
         console.log(parent_id.value);
@@ -443,7 +758,7 @@ if(editselected_row.value.parent_id){
   'asin': editselected_row.value.asin
  }
   console.log(formData);
-  axios.put("http://159.223.87.212/api/v1/child-products/"+editselected_row.value._id,data,{headers:authHeader()}) .then((response) => {
+  axios.put("https://api.j-wire.tech/v1/child-products/"+editselected_row.value._id,data,{headers:authHeader()}) .then((response) => {
         console.log(response.data);
         loadData();
         parent_id.value =response.data.data.id;
@@ -462,7 +777,7 @@ else{
   /*formData.append('image', selectedImage.value);
       formData.append('product_name', editselected_row.value.product_name);
       formData.append('asin', editselected_row.value.asin);*/
-    axios.put("http://159.223.87.212/api/v1/products/"+product_id.value,data,{headers:authHeader()}) .then((response) => {
+    axios.put("https://api.j-wire.tech/v1/products/"+product_id.value,data,{headers:authHeader()}) .then((response) => {
         console.log(response.data);
         loadData();
         parent_id.value =response.data.data.id;
@@ -486,7 +801,7 @@ else{
       formData.append('product_info', childproducts.value[i].child_name);
       formData.append('parent_id',parent_id.value);
       console.log(formData);
-      axios.post("http://159.223.87.212/api/v1/child-products/child-products",formData,{headers:authHeader()}) .then((response) => {
+      axios.post("https://api.j-wire.tech/v1/child-products/child-products",formData,{headers:authHeader()}) .then((response) => {
         console.log(response.data);
         loadData();
       })
@@ -497,6 +812,12 @@ else{
 
  }
 
+ const addCategory = () => {
+  const weakpointarray= category_weakpoint.value.split(',')
+   categories.value = [...categories.value,{label:category_label.value,title:category_label.value,values:weakpointarray}]
+   addCategorydiv.value=false;
+ }
+
  const addanotherchild = (i) => {
   addchildpdt(i);
   childproducts.value = [...childproducts.value, {child_name: '', child_asin: '',childimage_src:''}]
@@ -504,14 +825,15 @@ else{
 
   const deletechild = (row) => {
     childproducts.value.splice(childproducts.value[i], 1);
-   /*api.delete(`http://159.223.87.212/api/v1/child-products/${row._id}`,{headers:authHeader()}) .then((response) => {
+   /*api.delete(`https://api.j-wire.tech/v1/child-products/${row._id}`,{headers:authHeader()}) .then((response) => {
         console.log(response.data);
       })*/
  }
 
   return {sno,pdtimage,rows,image,imagePath,handleFileUpload,selectedImage,productImages,childproductImages,id,
-      columns,editprompt,editProduct,onEditChild,onDeleteChild,
-      onEdit,child_name,child_asin,childimage_src,parent_id,editselected_row,
+      columns,editprompt,editProduct,onEditChild,onDeleteChild,rivalweakpointmodal,rivalsettingsmodal,rivalsettings_tab,
+      onEdit,child_name,child_asin,childimage_src,parent_id,editselected_row,productsetting,asinlists,
+      supplements,apparel,bag,fashion,electric,present,categories,addCategory,category_label,category_weakpoint,delweakpoint,addCategorydiv,
       onDelete,childcolumns,addprompt,product_name,asin,image_src,filesImages,childproduct,childproducts,addProduct,addchildpdt,addanotherchild,deletechild}
   }
 }

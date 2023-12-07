@@ -1,7 +1,7 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 
-const API_URL = 'http://159.223.87.212/api/v1/';
+const API_URL = 'https://api.j-wire.tech/v1/';
 
 class UserService {
   getPublicContent() {

@@ -36,7 +36,7 @@ export default {
   /*const accounts = ref(null);
   const rows=ref(null);
   function loadData () {
-    axios.get(`http://159.223.87.212/api/v1/accounts`,{ headers: authHeader() })
+    axios.get(`https://api.j-wire.tech/v1/accounts`,{ headers: authHeader() })
       .then((response) => {
         rows.value = response.data.data.accounts
         console.log(rows.value)
@@ -94,7 +94,7 @@ export default {
     /*
   },
 };*/
- /*fetch('http://159.223.87.212/api/v1/accounts/')
+ /*fetch('https://api.j-wire.tech/v1/accounts/')
     .then(response => response.json())
     .then(data => accounts.value = data);
   console.log(accounts.value);*/
