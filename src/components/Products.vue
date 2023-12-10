@@ -297,7 +297,7 @@
   <q-tab-panel name="rivalinfo">
     <div class="text-h6">ライバル情報の入力</div>
     <q-form ref="rivalinfo"
-      @submit="onSubmit"
+      @submit="onSubmitRivalInfo"
       @reset="onReset"
       class="q-gutter-md"
       
@@ -335,9 +335,9 @@
    
       <q-row v-for="(category,i) in categories" :key ="i" class="q-mb-md">
         <q-col class="col-6">
-    <q-toggle v-model="category.title" :label="category.label" />
+    <q-toggle v-model="category.flag" :label="category.label" />
     <q-list bordered separator v-for="(subcat,index) in category.values" :key="index">
-      <q-item clickable v-ripple :active="category.title">
+      <q-item clickable v-ripple :active="category.flag">
         <q-item-section>{{ subcat }}</q-item-section>
         <q-item-section side @click="delweakpoint(category,index)">X</q-item-section>
       </q-item>
@@ -421,15 +421,15 @@
       class="q-gutter-md"
     >
     <q-card-section><q-input v-model="category_label" label="Enter Category"  /></q-card-section>
-      <q-card-section> <textarea class="p-3 border w-full"  v-model="category_weakpoint" placeholder="Enter weakpoints"  ></textarea></q-card-section>
+      <q-card-section> <textarea class="p-3 border w-full"  v-model="category_weakpoint" placeholder="Enter weakpoints"></textarea></q-card-section>
       <q-card-section> <q-btn label="Submit" type="submit" color="primary"/></q-card-section>
         </q-form>
   </q-card>
 </div> 
     <q-item-section>
-    <textarea class="p-3 "  v-model="category_additionaltext" placeholder="Additional Text"  ></textarea>
+    <textarea class="p-3"  v-model="category_additionaltext" placeholder="Additional Text"  ></textarea>
   </q-item-section>    
-  <q-card class="my-3 p-3 border">
+  <q-card class="my-3 p-3 border bg-blue-grey-5 text-white">
     <div class="text-h6" >ライバルの情報</div>
     <q-card-section>
     <label class="text-h8">ライバルの商品タイトル</label>
@@ -441,11 +441,11 @@
   </q-card-section>  
   <q-card-section>
     <label class="text-h8">他社の商品紹介コンテンツ</label>
-    <p>{{prod_contents  }}</p>
+    <p>{{prod_contents }}</p>
   </q-card-section>  
   <q-card-section>
     <label class="text-h8">レビュー（悪い）</label>
-    <p>{{reviews  }}</p>
+    <p>{{reviews }}</p>
   </q-card-section> 
   </q-card>    
   </q-tab-panel>
@@ -509,6 +509,10 @@ const editprompt=ref(false);
 const category_label = ref('');
 const category_weakpoint = ref('');
 const addCategorydiv = ref(false);
+const product_title = ref('');
+const  bullets= ref('');
+const prod_contents = ref('');
+const reviews= ref('')
 const categories = ref([
   {
     title:'Supplements',
@@ -526,22 +530,23 @@ const categories = ref([
     values: ['サイズが明記されていないため','素材の証明がない','梱包がしっかりしていない']
   },
   {
-    title:('Present'),
+    title:'Present',
     label:'プレゼント',
     values: ['梱包がしっかりしていない']
   },
   {
-    title:('Fashion'),
+    title:'Fashion',
     label:'アパレル、ファッション、小物、雑貨',
     values: ['デザインのこだわり、色のこだわりがない']
   },
   {
+    title:'Bag',
     label:'Bag',
     values: ['縫製が雑']
   },
 ])
 for(let i=0;i<categories.value.length;i++){
-  categories.value[i].label=true;
+  categories.value[i].flag = true;
 }
 
 
@@ -632,7 +637,7 @@ const onDeleteChild = (row) => {
   const delweakpoint = (row,index) => {
     console.log(row);
     for(let i=0;i<categories.value.length;i++){
-      if(categories.value[i].title== row.title){
+      if(categories.value[i].title == row.title){
         categories.value[i].values.splice(categories.value[i].values[index], 1);
         console.log(categories.value[i].values.length);
        if(categories.value[i].values.length == 0){
@@ -814,7 +819,7 @@ else{
 
  const addCategory = () => {
   const weakpointarray= category_weakpoint.value.split(',')
-   categories.value = [...categories.value,{label:category_label.value,title:category_label.value,values:weakpointarray}]
+   categories.value = [...categories.value,{label:category_label.value,title:category_label.value,values:weakpointarray,flag:true}]
    addCategorydiv.value=false;
  }
 
@@ -830,9 +835,14 @@ else{
       })*/
  }
 
+ const onSubmitRivalInfo = () => {
+  rivalsettings_tab.value= "rivalweakpoint";
+
+ }
+
   return {sno,pdtimage,rows,image,imagePath,handleFileUpload,selectedImage,productImages,childproductImages,id,
       columns,editprompt,editProduct,onEditChild,onDeleteChild,rivalweakpointmodal,rivalsettingsmodal,rivalsettings_tab,
-      onEdit,child_name,child_asin,childimage_src,parent_id,editselected_row,productsetting,asinlists,
+      onEdit,child_name,child_asin,childimage_src,parent_id,editselected_row,productsetting,asinlists,product_title,bullets,prod_contents,reviews,onSubmitRivalInfo,
       supplements,apparel,bag,fashion,electric,present,categories,addCategory,category_label,category_weakpoint,delweakpoint,addCategorydiv,
       onDelete,childcolumns,addprompt,product_name,asin,image_src,filesImages,childproduct,childproducts,addProduct,addchildpdt,addanotherchild,deletechild}
   }

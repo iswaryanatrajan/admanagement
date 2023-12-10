@@ -150,7 +150,7 @@ const headlines=ref(null);
 const route = useRoute();
 
 function loadData () {
-  api.get(`http://159.223.87.212/api/v1/products/${route.params.id}`, { headers: authHeader() })
+  api.get(`https://api.j-wire.tech/v1/products/${route.params.id}`, { headers: authHeader() })
       .then((response) => {
         product.value = response.data.data;
         console.log(product.value);
@@ -162,7 +162,8 @@ function loadData () {
   { accountname:'Account 1', headline:'headline 3',campaignID:'', advskunumber: '',repasin:product.value.asin,advasin:product.value.asin,entryDate:entryDate},
 ];
         getHeadlines(product.value.id);
-        getRivalHeadlines(product.value.id);
+     
+       // getRivalHeadlines(product.value.id);
       })
       .catch(() => {
         console.log('not ht')
@@ -184,7 +185,7 @@ const getHeadlines = (product_id) => {
       .then((response) => {
         headlines.value = response.data.data;
         console.log(headlines.value);
-
+    
       })
       .catch(() => {
         console.log('not ht')
