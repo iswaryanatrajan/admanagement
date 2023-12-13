@@ -157,3 +157,5 @@ align-items: center;
 .q-tabs__content--align-justify .q-tab {
   flex: none !important;
 }
+[type=textarea]:focus{box-shadow: none !important;}
+.q-field__native:focus{box-shadow: none !important;}

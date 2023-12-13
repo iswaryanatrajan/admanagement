@@ -109,11 +109,14 @@
           <q-td class="q-pa-md q-gutter-sm">
           <q-icon name="edit" size="sm" @click="onEdit(props.row)" />
           <q-icon name="delete" size="sm" @click="onDelete(props.row)" />
+
           <RouterLink :to= "{ name: 'productinfo', params: { id: props.row.id, parentid: 0}}">
-          <q-btn  color="primary" label="見出しの作成" ></q-btn>
+          <!--<q-btn  color="primary" label="見出しの作成" ></q-btn>-->
+          <q-btn  color="primary" label="product setting " ></q-btn>
           </RouterLink>
           <a>
-            <q-btn @click="productsetting = true" color="primary" label=" 商品設定（自社）" ></q-btn></a>
+            <!--<q-btn @click="productsetting = true" color="primary" label=" 商品設定（自社）" ></q-btn></a>-->
+            <q-btn @click="productsetting = true" color="primary" label="Competitor week point" ></q-btn></a>
 
         </q-td>
         </q-tr>
@@ -270,6 +273,8 @@
       </div>
       </q-card>
       </q-dialog>
+
+
       <q-dialog v-model="rivalsettingsmodal" persistent>
       <q-card style="width: 1000px; max-width: 90vw;"  >
         <q-toolbar>
@@ -299,27 +304,29 @@
     <q-form ref="rivalinfo"
       @submit="onSubmitRivalInfo"
       @reset="onReset"
-      class="q-gutter-md"
-      
+      class="q-gutter-md" 
     >
-    <q-input  v-model="product_title" label="Product Title"   :rules="[ val => val && val.length > 0 || 'Please enter title']"/>
+    <q-input  v-model="product_title" label="Product Title" outlined :rules="[ val => val && val.length > 0 || 'Please enter title']"/>
     <q-input
       v-model="bullets"
       label="5過剰(bullets)"
-      
-      autogrow
+      type="textarea"
+      outlined
+      rows="3"
     />
     <q-input
+      type="textarea"
       v-model="prod_contents"
       label="商品紹介コンテンツ(A+)"
-      
-      autogrow
+      outlined
+      rows="3"
     />
     <q-input
+      type="textarea"
       v-model="reviews"
       label="レビュー（悪い） (reviews)"
-      
-      autogrow
+      outlined
+      rows="3"
     />
     <div>
         <q-btn label="Submit" type="submit" color="primary"/>
@@ -329,7 +336,57 @@
   </q-tab-panel>
   <q-tab-panel name="rivalweakpoint">
     <div class="text-h8"> ライバルのウィークポイントを見つけてください。</div>
-    <div class="q-pa-md q-gutter-md" style="max-width: 350px" >
+    <div class="appealtarget flex p-3">
+      <div class="">
+      <div class="text-h7 mb-3">①訴求(appeal)　Strong point</div>
+          <div class="mb-3">
+            <textarea class="p-3 border  border-gray-300 rounded-lg w-full" rows="10"   v-model="generalappealform.strong_point" :disabled="generalappealform.editable==false" placeholder="Enter a strong point"></textarea>
+            </div>
+            <div class="text-h7 mb-3">②ターゲット who is the target?</div>
+          <div class="mb-3 flex items-center">
+            <label for="age" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100" >Age:</label>
+            <select id="age" v-model="generalappealform.min_age" :disabled="generalappealform.editable==false" class="w-max mr-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option>Select Age</option>
+              <option v-for="index in 100" :key="index" :value="index">
+                  {{ index }}
+              </option>
+            </select> ~
+            <select id="age" v-model="generalappealform.max_age" :disabled="generalappealform.editable==false" class="w-max ml-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option>Select Age</option>
+              <option v-for="index in computedArr" :key="index" :value="index">
+                  {{ index }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="gender" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100">Gender:</label>
+            <select id="gender" v-model="generalappealform.gender" :disabled="generalappealform.editable==false" class="w-max  border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option value="Select">Select Gender</option>
+              <option value="男性">Male （男性）</option>
+              <option value="女性">Female （女性）</option>
+              <option value="男性と女性両方">Both（男性と女性両方）</option>
+            </select>
+          </div>
+          <div class="mb-3">
+          <label for="why" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-auto">ターゲットにする悩みまたは欲しい理由:<br/> Why they want to have it?</label>
+          <textarea class="p-3 border border-gray-300 w-full rounded-lg" :disabled="generalappealform.editable==false" v-model="generalappealform.motivation" placeholder=""></textarea>
+          </div>
+          <div>
+          <label for="productfeature" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">どの特徴が、どのように欲しくなるのか、解決するのか:<br/> What type of your product feature would solve this issue?</label>
+          <textarea class="p-3 border border-gray-300 w-full rounded-lg" :disabled="generalappealform.editable==false" v-model="generalappealform.solving_feature" placeholder=""></textarea>
+          </div>
+          <button type="button"   @click="confirmappeal()" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
+    </div>
+    <q-dialog v-model="confirmappealmodal" persistent>
+            <q-card style="width: 900px; max-width: 80vw;">
+              <q-toolbar>
+                <q-toolbar-title>Confirm Appeal Target</q-toolbar-title>
+                <q-btn flat round dense icon="close" v-close-popup />
+              </q-toolbar>
+              <q-card-section>
+                <textarea class="p-3 border w-full"  rows="3" v-model="confirmappealtext" ></textarea>
+              </q-card-section>
+            <div class="q-pa-md q-gutter-md mx-5"  >
       <q-layout>
       <q-page-container>
    
@@ -347,6 +404,26 @@
   </q-row>
 </q-page-container>
 </q-layout>
+<div class="addCategory my-3">
+    <q-btn label="Add new Category" @click=" addCategorydiv = true" type="button" color="primary"/>
+    <q-card class="lg:w-2/3 my-3 border" v-if="addCategorydiv">
+      <q-form 
+      @submit="addCategory"
+      class="q-gutter-md"
+    >
+    <q-card-section><q-input v-model="category_label" label="Enter Category"  /></q-card-section>
+      <q-card-section> <textarea class="p-3 border w-full"  v-model="category_weakpoint" placeholder="Enter weakpoints seperated by commas"></textarea></q-card-section>
+      <q-card-section> <q-btn label="Submit" type="submit" color="primary" class="mr-3"/>
+        <q-btn label="Cancel" @click="addCategorydiv=false" type="button" color="primary"/>  </q-card-section>
+        </q-form>
+  </q-card>
+</div> 
+    <q-item-section>
+    <textarea class="p-3"  v-model="category_additionaltext" placeholder="Additional Text"  ></textarea>
+  </q-item-section> 
+  <q-card-section>
+            <q-btn  color="primary" @click="submitappeal()" label="Submit" v-close-popup/>
+            </q-card-section>
   <!--
     <q-toggle v-model="electric" label="家電" />
     <q-list bordered separator>
@@ -413,22 +490,12 @@
     </q-list>
     -->
     </div>
-    <div class="addCategory my-3">
-    <q-btn label="Add Category" @click=" addCategorydiv = true" type="button" color="primary"/>
-    <q-card class="lg:w-2/3 my-3 border" v-if="addCategorydiv">
-      <q-form 
-      @submit="addCategory"
-      class="q-gutter-md"
-    >
-    <q-card-section><q-input v-model="category_label" label="Enter Category"  /></q-card-section>
-      <q-card-section> <textarea class="p-3 border w-full"  v-model="category_weakpoint" placeholder="Enter weakpoints"></textarea></q-card-section>
-      <q-card-section> <q-btn label="Submit" type="submit" color="primary"/></q-card-section>
-        </q-form>
-  </q-card>
-</div> 
-    <q-item-section>
-    <textarea class="p-3"  v-model="category_additionaltext" placeholder="Additional Text"  ></textarea>
-  </q-item-section>    
+            </q-card>
+
+          </q-dialog>
+  </div>
+
+   
   <q-card class="my-3 p-3 border bg-blue-grey-5 text-white">
     <div class="text-h6" >ライバルの情報</div>
     <q-card-section>
@@ -462,7 +529,7 @@
   </template>
 
 <script >
-import { ref,reactive, watch} from "vue";
+import { ref,reactive, watch,computed} from "vue";
 import { api } from '../boot/axios'
 import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
@@ -513,6 +580,30 @@ const product_title = ref('');
 const  bullets= ref('');
 const prod_contents = ref('');
 const reviews= ref('')
+//generalapppeal
+const strong_point = ref("");
+const motivation = ref("");
+const solving_feature = ref("");
+const min_age= ref(10);
+const max_age= ref(20);
+const gender = ref("");
+const confirmappealmodal = ref(false);
+const confirmappealtext =ref("");
+let generalappealform = ref([ 
+  {strong_point: '', motivation: '',solving_feature:'',min_age:10,max_age:20,gender:'',editable:true},
+]);
+const confirmappeal = () => {
+  confirmappealtext.value = "この商品は" + generalappealform.value.strong_point+"という特徴があります。\nその人たちは"+ generalappealform.value.min_age + "~" + generalappealform.value.max_age + "才くらいの" + generalappealform.value.gender + "で" + generalappealform.value.motivation + "\nこの商品は" + generalappealform.value.solving_feature + "といったことを説明したキャッチコピーを10とおり作成したいです。"
+  confirmappealmodal.value = true;
+}
+const computedArr = computed(() => {
+  let arr = [];
+      for (var i = min_age.value; i <= 100; i++)
+        arr.push(i);
+  return arr;
+}) 
+//general appeal ends
+
 const categories = ref([
   {
     title:'Supplements',
@@ -844,7 +935,8 @@ else{
       columns,editprompt,editProduct,onEditChild,onDeleteChild,rivalweakpointmodal,rivalsettingsmodal,rivalsettings_tab,
       onEdit,child_name,child_asin,childimage_src,parent_id,editselected_row,productsetting,asinlists,product_title,bullets,prod_contents,reviews,onSubmitRivalInfo,
       supplements,apparel,bag,fashion,electric,present,categories,addCategory,category_label,category_weakpoint,delweakpoint,addCategorydiv,
-      onDelete,childcolumns,addprompt,product_name,asin,image_src,filesImages,childproduct,childproducts,addProduct,addchildpdt,addanotherchild,deletechild}
+      onDelete,childcolumns,addprompt,product_name,asin,image_src,filesImages,childproduct,childproducts,addProduct,addchildpdt,addanotherchild,deletechild,
+      min_age,max_age,gender,strong_point,motivation,solving_feature,generalappealform,confirmappealmodal,confirmappealtext,confirmappeal,computedArr}
   }
 }
 
