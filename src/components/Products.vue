@@ -514,7 +514,7 @@
     <q-list bordered separator v-for="(subcat,index) in category.values" :key="index">
       <q-item clickable v-ripple :active="category.flag">
         <q-item-section>{{ subcat }}</q-item-section>
-        <q-item-section side @click="delweakpoint(category,index,rowIndex,colIndex+1)">X</q-item-section>
+        <q-item-section side @click="delweakpoint(category,index,rowIndex,colIndex+1)">Add</q-item-section>
       </q-item>
     </q-list>
     </q-col>
