@@ -328,21 +328,20 @@
       outlined
       rows="3"
     />
+    <div class="row">
+    <q-select v-model="min_age" :options="min_age_options" label="Min age" outlined style="width: 150px"/>
+    <span class="p-2"> ~ </span>
+    <q-select v-model="max_age" :options="max_age_options" label="Max age" outlined style="width: 150px"/>
+    </div>
+    <q-select v-model="gender" :options="gender_options" label="Gender" outlined />
     <div>
         <q-btn label="Submit" type="submit" color="primary"/>
         <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
       </div>
+
     </q-form>
-  </q-tab-panel>
-  <q-tab-panel name="rivalweakpoint">
-    <div class="text-h8"> ライバルのウィークポイントを見つけてください。</div>
-    <div class="appealtarget flex p-3">
+   <!-- <div class="appealtarget flex p-3">
       <div class="">
-      <div class="text-h7 mb-3">①訴求(appeal)　Strong point</div>
-          <div class="mb-3">
-            <textarea class="p-3 border  border-gray-300 rounded-lg w-full" rows="10"   v-model="generalappealform.strong_point" :disabled="generalappealform.editable==false" placeholder="Enter a strong point"></textarea>
-            </div>
-            <div class="text-h7 mb-3">②ターゲット who is the target?</div>
           <div class="mb-3 flex items-center">
             <label for="age" class="block mr-2 text-sm font-medium text-gray-900 dark:text-white w-100" >Age:</label>
             <select id="age" v-model="generalappealform.min_age" :disabled="generalappealform.editable==false" class="w-max mr-3 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -367,36 +366,68 @@
               <option value="男性と女性両方">Both（男性と女性両方）</option>
             </select>
           </div>
-          <div class="mb-3">
-          <label for="why" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-auto">ターゲットにする悩みまたは欲しい理由:<br/> Why they want to have it?</label>
-          <textarea class="p-3 border border-gray-300 w-full rounded-lg" :disabled="generalappealform.editable==false" v-model="generalappealform.motivation" placeholder=""></textarea>
-          </div>
-          <div>
-          <label for="productfeature" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white w-100">どの特徴が、どのように欲しくなるのか、解決するのか:<br/> What type of your product feature would solve this issue?</label>
-          <textarea class="p-3 border border-gray-300 w-full rounded-lg" :disabled="generalappealform.editable==false" v-model="generalappealform.solving_feature" placeholder=""></textarea>
-          </div>
-          <button type="button"   @click="confirmappeal()" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
+          <button type="button"  class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2">送信</button>
     </div>
-    <q-dialog v-model="confirmappealmodal" persistent>
-            <q-card style="width: 900px; max-width: 80vw;">
-              <q-toolbar>
-                <q-toolbar-title>Confirm Appeal Target</q-toolbar-title>
-                <q-btn flat round dense icon="close" v-close-popup />
-              </q-toolbar>
-              <q-card-section>
-                <textarea class="p-3 border w-full"  rows="3" v-model="confirmappealtext" ></textarea>
-              </q-card-section>
-            <div class="q-pa-md q-gutter-md mx-5"  >
+  <q-dialog v-model="confirmappealmodal" persistent>
+    
+
+          </q-dialog>
+  </div>-->
+  </q-tab-panel>
+  <q-tab-panel name="rivalweakpoint">
+    <q-card class="my-3 p-3 border bg-blue-grey-5 text-white">
+    <div class="text-h6" >ライバルの情報</div>
+    <q-card-section>
+    <label class="text-h8">ライバルの商品タイトル</label>
+    <p>{{ product_title }}</p>
+  </q-card-section>   
+  <q-card-section>
+    <label class="text-h8">ライバルの商品特徴</label>
+    <p>{{ bullets }}</p>
+  </q-card-section>  
+  <q-card-section>
+    <label class="text-h8">他社の商品紹介コンテンツ</label>
+    <p>{{prod_contents }}</p>
+  </q-card-section>  
+  <q-card-section>
+    <label class="text-h8">レビュー（悪い）</label>
+    <p>{{reviews }}</p>
+  </q-card-section> 
+  <q-card-section>
+    <label class="text-h8">Age</label>
+    <p>{{min_age }} <span class="p-2"> ~ </span> {{max_age }}</p>
+  </q-card-section> 
+  <q-card-section>
+    <label class="text-h8">Gender</label>
+    <p>{{gender }}</p>
+  </q-card-section> 
+  </q-card> 
+
+    <q-card class="mb-3" v-for="(row,rowIndex) in queansset" :key ="rowIndex">
+      <div v-if="rowIndex == queansset.length-1">
+      <q-card-section>
+        <textarea class="p-3 border w-full"  rows="3" v-model="queansset[rowIndex][0].question" placeholder="New Question" ></textarea>
+        <q-btn  color="primary" @click="helperquemodal=true" label="Helper Questions"/>
+      </q-card-section>
+      <q-card-section>
+            <q-btn  color="primary" @click="submitfirstquestion(rowIndex)" label="Submit"/>
+      </q-card-section>
+      <q-dialog v-model="helperquemodal" persistent>
+  <q-card> <q-toolbar>
+          <q-toolbar-title></q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+      <div class="q-pa-md q-gutter-md mx-5"  >
       <q-layout>
       <q-page-container>
    
-      <q-row v-for="(category,i) in categories" :key ="i" class="q-mb-md">
+      <q-row v-for="(category,cat_i) in categories" :key ="cat_i" class="q-mb-md">
         <q-col class="col-6">
     <q-toggle v-model="category.flag" :label="category.label" />
     <q-list bordered separator v-for="(subcat,index) in category.values" :key="index">
       <q-item clickable v-ripple :active="category.flag">
         <q-item-section>{{ subcat }}</q-item-section>
-        <q-item-section side @click="delweakpoint(category,index)">X</q-item-section>
+        <q-item-section side @click="delweakpoint(category,index,rowIndex,0)">Add</q-item-section>
       </q-item>
     </q-list>
     </q-col>
@@ -418,103 +449,13 @@
         </q-form>
   </q-card>
 </div> 
-    <q-item-section>
-    <textarea class="p-3"  v-model="category_additionaltext" placeholder="Additional Text"  ></textarea>
-  </q-item-section> 
-  <q-card-section>
-            <q-btn  color="primary" @click="submitappeal()" label="Submit" v-close-popup/>
-            </q-card-section>
-  <!--
-    <q-toggle v-model="electric" label="家電" />
-    <q-list bordered separator>
-      <q-item clickable v-ripple :active="electric">
-        <q-item-section>操作が難しそう（スペックが複雑で）</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-      <q-item clickable v-ripple :active="electric">
-        <q-item-section>スペックが古い</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-      <q-item clickable v-ripple :active="electric">
-        <q-item-section>専門家の確認がない</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-      <q-item clickable v-ripple :active="electric">
-        <q-item-section>望んでいる機能が搭載されていない、または明確ではない</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-      <q-item clickable v-ripple :active="electric">
-        <q-item-section>スペックが低い</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-      <q-item clickable v-ripple :active="electric">
-        <q-item-section>健康的被害を受ける成分など</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-    </q-list>
-    <q-toggle v-model="apparel" label="アパレル" />
-    <q-list bordered separator>
-      <q-item clickable v-ripple :active="apparel">
-        <q-item-section>サイズが明記されていないため</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-      <q-item clickable v-ripple :active="apparel">
-        <q-item-section>素材の証明がない</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-      <q-item clickable v-ripple :active="apparel">
-        <q-item-section>梱包がしっかりしていない</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-      </q-list>
-      <q-toggle v-model="present" label="プレゼント" />
-    <q-list bordered separator>
-      <q-item clickable v-ripple :active="present">
-        <q-item-section>梱包がしっかりしていない</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-    </q-list>
-    <q-toggle v-model="fashion" label="アパレル、ファッション、小物、雑貨" />
-    <q-list bordered separator>
-      <q-item clickable v-ripple :active="fashion">
-        <q-item-section>デザインのこだわり、色のこだわりがない</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-    </q-list>
-    <q-toggle v-model="bag" label="アパレル、財布、バッグ" />
-    <q-list bordered separator>
-      <q-item clickable v-ripple :active="bag">
-        <q-item-section>縫製が雑</q-item-section>
-        <q-item-section side @click="delweakpoint()">X</q-item-section>
-      </q-item>
-    </q-list>
-    -->
-    </div>
-            </q-card>
-
-          </q-dialog>
   </div>
+</q-card>
 
-   
-  <q-card class="my-3 p-3 border bg-blue-grey-5 text-white">
-    <div class="text-h6" >ライバルの情報</div>
-    <q-card-section>
-    <label class="text-h8">ライバルの商品タイトル</label>
-    <p>{{ product_title }}</p>
-  </q-card-section>   
-  <q-card-section>
-    <label class="text-h8">ライバルの商品特徴</label>
-    <p>{{ bullets }}</p>
-  </q-card-section>  
-  <q-card-section>
-    <label class="text-h8">他社の商品紹介コンテンツ</label>
-    <p>{{prod_contents }}</p>
-  </q-card-section>  
-  <q-card-section>
-    <label class="text-h8">レビュー（悪い）</label>
-    <p>{{reviews }}</p>
-  </q-card-section> 
-  </q-card>    
+  </q-dialog>
+</div>
+    </q-card>
+    <q-btn  color="primary" @click="showallquestion=true" label="Show all answers"/>
   </q-tab-panel>
   </q-tab-panels>
   </q-card>
@@ -522,6 +463,117 @@
       </div>
       </q-card>
       </q-dialog>
+
+
+  <q-dialog v-model="queansmodal" persistent>
+      <q-card style="width: 900px; max-width: 80vw;"  >
+        <q-toolbar>
+          <q-toolbar-title></q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+        <div class="q-pa-md row items-center mb-5 no-wrap" v-for="(row,index) in queansset" :key ="index">
+        <div  v-for="(queans,colIndex) in row" :key ="colIndex">
+          <div class="q-pa-md row items-center mb-5 no-wrap" v-if="index == rowIndex ">
+     <q-card v-if="queans.answer != '' ">
+      <q-card-section>
+        <span>{{queans.question}}</span>
+      </q-card-section>
+      <q-card-section >
+        <span>{{queans.answer}}</span>
+      </q-card-section>
+    </q-card>
+    <svg v-if="queans.answer != ''" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+  </svg>
+  <!--<q-card v-if="colIndex+1 < queans.length && colIndex==queans.length-2">-->
+    <q-card v-if="colIndex+1 < queansset[index].length && colIndex==queansset[index].length-2">
+      <q-card-section>
+        <textarea class="p-3 border w-full"  rows="3"  v-model="queansset[index][colIndex+1].question" ></textarea>
+        <q-btn  color="primary" @click="helperquemodal=true" label="Helper Questions"/>
+      </q-card-section>
+      <q-card-section>
+        <div class="row justify-end">
+            <q-btn  color="primary" @click="submitquestion(colIndex+1)" label="Submit"/>
+            </div>
+      </q-card-section>
+      <q-card-section class="mb-5">
+      <q-btn color="primary" @click="endquestion(colIndex+1)" label="New Question"/>
+    </q-card-section>
+    <q-dialog v-model="helperquemodal" persistent>
+  <q-card> <q-toolbar>
+          <q-toolbar-title></q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+      <div class="q-pa-md q-gutter-md mx-5"  >
+      <q-layout>
+      <q-page-container>
+   
+      <q-row v-for="(category,i) in categories" :key ="i" class="q-mb-md">
+        <q-col class="col-6">
+    <q-toggle v-model="category.flag" :label="category.label" />
+    <q-list bordered separator v-for="(subcat,index) in category.values" :key="index">
+      <q-item clickable v-ripple :active="category.flag">
+        <q-item-section>{{ subcat }}</q-item-section>
+        <q-item-section side @click="delweakpoint(category,index,rowIndex,colIndex+1)">X</q-item-section>
+      </q-item>
+    </q-list>
+    </q-col>
+
+  </q-row>
+</q-page-container>
+</q-layout>
+<div class="addCategory my-3">
+    <q-btn label="Add new Category" @click=" addCategorydiv = true" type="button" color="primary"/>
+    <q-card class="lg:w-2/3 my-3 border" v-if="addCategorydiv">
+      <q-form 
+      @submit="addCategory"
+      class="q-gutter-md"
+    >
+    <q-card-section><q-input v-model="category_label" label="Enter Category"  /></q-card-section>
+      <q-card-section> <textarea class="p-3 border w-full"  v-model="category_weakpoint" placeholder="Enter weakpoints seperated by commas"></textarea></q-card-section>
+      <q-card-section> <q-btn label="Submit" type="submit" color="primary" class="mr-3"/>
+        <q-btn label="Cancel" @click="addCategorydiv=false" type="button" color="primary"/>  </q-card-section>
+        </q-form>
+  </q-card>
+</div> 
+  </div>
+</q-card>
+
+  </q-dialog>
+    </q-card>
+  </div>
+      </div>
+      </div>
+      </q-card>
+
+      </q-dialog>  
+      <q-dialog v-model="showallquestion" persistent>
+      <q-card style="width: 900px; max-width: 80vw;"  >
+        <q-toolbar>
+          <q-toolbar-title></q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+      <div class="q-pa-md row items-center mb-5 no-wrap" v-for="(row,rowIndex) in queansset" :key ="rowIndex">
+      <div class="q-pa-md row items-center q-gutter-lg  no-wrap" v-for="(queans, colIndex) in row" :key="colIndex" >
+        <div v-if="queans.answer != ''">
+          <q-card-section v-if="queans.answer != ''">
+        <span>{{queans.question}}</span>
+      </q-card-section>
+      <q-card v-if="queans.answer != ''">
+      <q-card-section class="border" >
+        <span>{{queans.question + " - " + queans.answer}}</span>
+      </q-card-section>
+    </q-card>
+        </div>
+    
+    <svg v-if="(colIndex < queansset[rowIndex].length-2)" class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+  </svg>
+      </div>
+      </div>
+      </q-card>
+
+      </q-dialog>  
 </div>
   </div>
 
@@ -549,6 +601,9 @@ export default {
     const rivalweakpointmodal = ref(false);
     const rivalsettingsmodal = ref(false);
     const rivalsettings_tab = ref("rivalinfo");
+    const queansmodal = ref(false);
+    const showallquestion = ref(false);
+    const helperquemodal = ref(false);
     const supplements = ref(true);
     const apparel = ref(true);
     const bag = ref(true);
@@ -579,13 +634,28 @@ const addCategorydiv = ref(false);
 const product_title = ref('');
 const  bullets= ref('');
 const prod_contents = ref('');
-const reviews= ref('')
+const reviews= ref('');
+const min_age= ref(10);
+const max_age= ref(20);
+const gender = ref("");
+const min_age_options = computed(() => {
+  let arr = [];
+      for (var i = 1; i <= 100; i++)
+        arr.push(i);
+  return arr;
+}) 
+const max_age_options = computed(() => {
+  let arr = [];
+      for (var i = min_age.value; i <= 100; i++)
+        arr.push(i);
+  return arr;
+}) 
+const gender_options = ref(['男性','女性','男性と女性両方']);
+/*
 //generalapppeal
 const strong_point = ref("");
 const motivation = ref("");
 const solving_feature = ref("");
-const min_age= ref(10);
-const max_age= ref(20);
 const gender = ref("");
 const confirmappealmodal = ref(false);
 const confirmappealtext =ref("");
@@ -603,7 +673,7 @@ const computedArr = computed(() => {
   return arr;
 }) 
 //general appeal ends
-
+*/
 const categories = ref([
   {
     title:'Supplements',
@@ -639,6 +709,51 @@ const categories = ref([
 for(let i=0;i<categories.value.length;i++){
   categories.value[i].flag = true;
 }
+const queansrow = ref([]);
+const question = ref('');
+const rowIndex= ref(null);
+const cat_que = (catval,rowindex,colindex) => {
+  //question.value=question.value + catval;
+  queansset.value[rowindex][colindex].question=queansset.value[rowindex][colindex].question + catval;
+}
+/*const submitquestion = (rowIndex,i) => {
+  //question.value
+ // queansmodal.value = true;
+  console.log(rowIndex);
+  queansset.value[rowIndex][i].answer = "New answer from chatgpt";
+  queansset.value[rowIndex] = [...queansset.value[rowIndex], {question:'',answer:''}]
+  
+}*/
+const submitquestion = (i) => {
+  //question.value
+ // queansmodal.value = true;
+  console.log(rowIndex.value);
+  queansset.value[rowIndex.value][i].answer = "New answer from chatgpt";
+  queansset.value[rowIndex.value] = [...queansset.value[rowIndex.value], {question:'',answer:''}]
+  console.log(queansset.value[rowIndex.value]);
+}
+const endquestion = (rowIndex,i) => {
+  queansmodal.value = false;
+  console.log(rowIndex);
+  queansset.value = [...queansset.value, [{question:'',answer:''}]]
+}
+const submitfirstquestion = (rowindex) => {
+  //question.value
+  queansmodal.value = true;
+ rowIndex.value = rowindex ;
+ console.log(rowIndex.value);
+  queansset.value[rowIndex.value][0].answer = "New answer from chatgpt";
+ queansset.value[rowIndex.value] = [...queansset.value[rowIndex.value], {question:'',answer:''}]
+ queansrow.value = queansset.value[rowIndex.value];
+ console.log(queansrow.value);
+
+}
+const queansset= ref([
+  [{
+    question:'',
+    answer:'Answer from chatgpt',
+  }]
+]);
 
 
 const asinlists=ref(['B0CHX2F5QT','B0CHX2F5QV','B0CHX2DFQV','B0CHX345QV','B1DHX2F5QV','B0CHX2F5QB','B0CHX2F5QC','B0CHX2F5QD','B0CHX2F5QE','B0CHX2F5QF'])
@@ -725,10 +840,15 @@ const onDeleteChild = (row) => {
       console.log(`Deleting row - '${row.id}'`)
   }
 
-  const delweakpoint = (row,index) => {
+
+
+  const delweakpoint = (row,index,rowindex,colIndex) => {
     console.log(row);
+    console.log(rowindex);
+    console.log(colIndex);
     for(let i=0;i<categories.value.length;i++){
       if(categories.value[i].title == row.title){
+        cat_que(categories.value[i].values[index],rowindex,colIndex);
         categories.value[i].values.splice(categories.value[i].values[index], 1);
         console.log(categories.value[i].values.length);
        if(categories.value[i].values.length == 0){
@@ -736,8 +856,7 @@ const onDeleteChild = (row) => {
         }
       }
     }
-
-    
+    helperquemodal.value=false
   }
 
 
@@ -935,8 +1054,9 @@ else{
       columns,editprompt,editProduct,onEditChild,onDeleteChild,rivalweakpointmodal,rivalsettingsmodal,rivalsettings_tab,
       onEdit,child_name,child_asin,childimage_src,parent_id,editselected_row,productsetting,asinlists,product_title,bullets,prod_contents,reviews,onSubmitRivalInfo,
       supplements,apparel,bag,fashion,electric,present,categories,addCategory,category_label,category_weakpoint,delweakpoint,addCategorydiv,
-      onDelete,childcolumns,addprompt,product_name,asin,image_src,filesImages,childproduct,childproducts,addProduct,addchildpdt,addanotherchild,deletechild,
-      min_age,max_age,gender,strong_point,motivation,solving_feature,generalappealform,confirmappealmodal,confirmappealtext,confirmappeal,computedArr}
+      onDelete,childcolumns,addprompt,product_name,asin,image_src,filesImages,childproduct,childproducts,addProduct,addchildpdt,addanotherchild,deletechild,max_age_options,min_age_options,
+     min_age,max_age,gender,gender_options,cat_que,question,queansmodal,queansrow,submitquestion,rowIndex,helperquemodal,queansset,submitfirstquestion,endquestion,showallquestion}
+      //strong_point,motivation,solving_feature,generalappealform,confirmappealmodal,confirmappealtext,confirmappeal,computedArr}
   }
 }
 
